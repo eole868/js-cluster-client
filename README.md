@@ -10,12 +10,12 @@ This is a port of `ipfs/js-ipfs-api` adapted for the API exposed by `ipfs/ipfs-c
 
 This module can be installed through npm directly from the github repository.
 
-`npm install https://github.com/te0d/js-ipfs-cluster-api`
+`npm i ipfs-cluster-api`
 
 ### Dependencies
 
 This module requires `ipfs-cluster` to be running. It is assumed that the IPFS
-Cluster API is running on "127.0.0.1:9094".
+Cluster API(`ipfs-cluster-service`) is running on "127.0.0.1:9094".
 
 ## Usage
 
@@ -34,6 +34,8 @@ var ipfsCluster = ipfsClusterAPI('localhost', 9094, {protocol: 'http'})
 
 The API is currently a work-in-progress. The exposed methods are designed
 to be similar to `ipfs-cluster-ctl` provided in `ipfs/ipfs-cluster`.
+
+See [test](./test) for working examples
 
 ```
 ipfsCluster.id([options], [callback])
@@ -55,7 +57,7 @@ ipfsCluster.version([options], [callback])
 
 ## Maintainer
 
-This is a side project of mine (te0d).
+[**Vaibhav Saini**](https://github.com/vasa-develop)
 
 The code is mostly from `js-ipfs-api` modified to consume the `ipfs-cluster` API.
 
