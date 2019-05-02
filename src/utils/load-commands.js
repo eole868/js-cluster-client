@@ -8,7 +8,8 @@ function getCommands() {
     status: require('../status'),
     sync: require('../sync'),
     recover: require('../recover'),
-    version: require('../version')
+    version: require('../version'),
+    health: require('../health')
   }
 
   return cmds
