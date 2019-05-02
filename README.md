@@ -40,6 +40,8 @@ See [test](./test) for working examples
 ```
 ipfsCluster.id([options], [callback])
 
+ipfsCluster.add([fileBuffer OR filePath], [options], [callback])
+
 ipfsCluster.peers.ls([options], [callback])
 ipfsCluster.peers.add(addr, [options], [callback]) // e.g. /ip4/1.2.3.4/tcp/1234/<peerid>
 ipfsCluster.peers.rm(peerid, [options], [callback])
@@ -51,6 +53,11 @@ ipfsCluster.pin.rm(cid, [options], [callback])
 ipfsCluster.status([cid], [callback])
 ipfsCluster.sync([cid], [callback])
 ipfsCluster.recover(cid, [options], [callback])
+
+ipfsCluster.health.graph([options], [callback])
+ipfsCluster.health.metrics(name, [options], [callback])
+
+ipfsCluster.monitor(name, [options], [callback])
 
 ipfsCluster.version([options], [callback])
 ```
