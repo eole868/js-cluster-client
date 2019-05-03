@@ -4,7 +4,8 @@ function getCommands() {
   const cmds = {
     id: require('../id'),
     peers: require('../peers'),
-    pin: require('../pin'),
+    pin: require('../pins'),
+    allocations: require('../allocations'),
     status: require('../status'),
     sync: require('../sync'),
     recover: require('../recover'),
