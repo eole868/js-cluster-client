@@ -47,6 +47,7 @@ ipfsCluster.peers.add(addr, [options], [callback]) // e.g. /ip4/1.2.3.4/tcp/1234
 ipfsCluster.peers.rm(peerid, [options], [callback])
 
 ipfsCluster.pin.ls([cid], [callback])
+ipfsCluster.pin.filter([filter], [callback])      
 ipfsCluster.pin.add(cid, [options], [callback])   // e.g. { "replication_factor": 2 }
 ipfsCluster.pin.rm(cid, [options], [callback])
 
