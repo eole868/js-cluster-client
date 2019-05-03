@@ -12,7 +12,7 @@ module.exports = (arg) => {
       opts = undefined
     }
 
-    var monitorPath = 'monitor/metrics/';
+    var monitorPath = 'monitor/metrics';
     if (arg) {
       monitorPath += '/' + arg;
     }
