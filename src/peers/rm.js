@@ -14,7 +14,7 @@ module.exports = (send) => {
     send({
       path: rmPath,
       method: 'DELETE',
-      args: opts
+      qs: opts
     }, callback)
   })
 }

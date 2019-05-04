@@ -17,7 +17,7 @@ module.exports = (send) => {
       path: 'peers',
       method: 'POST',
       data: JSON.stringify(peerAddBody),
-      args: opts
+      qs: opts
     }, callback)
   })
 }

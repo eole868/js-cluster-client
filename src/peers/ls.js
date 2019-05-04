@@ -11,7 +11,7 @@ module.exports = (send) => {
 
     send({
       path: 'peers',
-      args: opts
+      qs: opts
     }, callback)
   })
 }
