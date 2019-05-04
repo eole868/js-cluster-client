@@ -13,7 +13,7 @@ module.exports = (arg) => {
     }
     send({
       path: 'id',
-      args: opts
+      qs: opts
     }, callback)
   })
 }
