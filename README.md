@@ -26,7 +26,7 @@ This module can be installed through npm directly from the github repository.
 ### Dependencies
 
 This module requires `ipfs-cluster` to be running. It is assumed that the IPFS
-Cluster API(`ipfs-cluster-service`) is running on "127.0.0.1:9094".
+Cluster API(`ipfs-cluster-service`) is running.
 
 ## Usage
 
