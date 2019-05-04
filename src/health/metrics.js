@@ -14,7 +14,7 @@ module.exports = (send) => {
 
     send({
       path: metricsPath,
-      args: opts
+      qs: opts
     }, callback)
   })
 }

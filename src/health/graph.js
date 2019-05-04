@@ -11,7 +11,7 @@ module.exports = (send) => {
     }
     send({
       path: 'health/graph',
-      args: opts
+      qs: opts
     }, callback)
   })
 }
