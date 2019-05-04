@@ -13,7 +13,7 @@ module.exports = (arg) => {
     }
     send({
       path: 'version',
-      args: opts
+      qs: opts
     }, callback)
   })
 }
