@@ -6,18 +6,34 @@ const moduleConfig = require('./utils/module-config')
 module.exports = (arg) => {
   const send = moduleConfig(arg)
 
-  return util.promisify((arg, opts, callback) => {
-    if (typeof opts == 'function') {
-      callback = opts
-      opts = undefined
+  return util.promisify((args, opts, callback) => {
+    
+    if (typeof args == 'function') {
+      callback = args
+      args = undefined
     }
 
-    var recoverPath = `pins/${arg}/recover`
+    if(typeof opts == 'function') {
+      callback = opts
+      if(args == 'string') {
+        opts = undefined
+      }
+      else{
+        opts = args
+        args = undefined
+      }
+    }
+
+    var recoverPath = 'pins/recover'
+
+    if(args) {
+      recoverPath = `pins/${args}/recover`
+    }
 
     send({
       method: 'POST',
       path: recoverPath,
-      args: opts
+      qs: opts
     }, callback)
   })
 }
