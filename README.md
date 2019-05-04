@@ -61,7 +61,7 @@ ipfsCluster.pins.ls([options], [callback])
 ipfsCluster.pins.add(cid, [options], [callback])   // e.g. { "replication_factor": 2 }
 ipfsCluster.pins.rm(cid, [options], [callback])
 
-ipfsCluster.allocations.filter(hash, [options], [callback])
+ipfsCluster.allocations(hash, [options], [callback])
 
 ipfsCluster.status([cid], [options], [callback])
 ipfsCluster.sync([cid], [options], [callback])
