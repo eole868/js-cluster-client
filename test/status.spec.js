@@ -33,13 +33,6 @@ describe('status', () => {
         })
     })
 
-    it('lists current status of tracked CIDs with \'pinned\' status (local state)', (done) => {
-        cluster.status({ filter: 'pinned', local: true }, (err, details) => {
-            assert.notExists(err, 'throws error while listing current status of tracked CIDs with \'pinned\' status (local state)')
-            done()
-        })
-    })
-
     it('lists current status of tracked CIDs with \'pinning\' status (local state)', (done) => {
         cluster.status({ filter: 'pinning', local: true }, (err, details) => {
             assert.notExists(err, 'throws error while listing current status of tracked CIDs with \'pinning\' status (local state)')
