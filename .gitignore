@@ -1,5 +1,6 @@
 dist
 package-lock.json
+assets
 
 **/node_modules
 **/*.log

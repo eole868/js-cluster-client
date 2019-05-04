@@ -2,6 +2,10 @@
 
 > A client library for the IPFS Cluster HTTP API, implemented in JavaScript.
 
+<p align="center">
+<img src="https://i.pinimg.com/564x/f4/f9/68/f4f968409552de91c2ff09d2a141f2e4.jpg" alt="ipfs-cluster-api" />
+</p>
+
 **UNOFFICIAL AND ALPHA**
 
 This is a port of `ipfs/js-ipfs-api` adapted for the API exposed by `ipfs/ipfs-cluster`.
@@ -38,31 +42,30 @@ to be similar to `ipfs-cluster-ctl` provided in `ipfs/ipfs-cluster`.
 See [test](./test) for working examples
 
 ```
-ipfsCluster.id([options], [callback])
+ipfsCluster.id([callback])
 
 ipfsCluster.add([fileBuffer OR filePath], [options], [callback])
 
-ipfsCluster.peers.ls([options], [callback])
-ipfsCluster.peers.add(addr, [options], [callback]) // e.g. /ip4/1.2.3.4/tcp/1234/<peerid>
-ipfsCluster.peers.rm(peerid, [options], [callback])
+ipfsCluster.peers.ls([callback])
+ipfsCluster.peers.add(addr, [callback]) // e.g. /ip4/1.2.3.4/tcp/1234/<peerid>
+ipfsCluster.peers.rm(peerid, [callback])
 
-ipfsCluster.pin.ls([options], [callback])    
-ipfsCluster.pin.add(cid, [options], [callback])   // e.g. { "replication_factor": 2 }
-ipfsCluster.pin.rm(cid, [options], [callback])
+ipfsCluster.pins.ls([options], [callback])    
+ipfsCluster.pins.add(cid, [options], [callback])   // e.g. { "replication_factor": 2 }
+ipfsCluster.pins.rm(cid, [options], [callback])
 
-ipfsCluster.allocations.filter([options], [callback])
-ipfsCluster.allocations.hash([cid], [callback])
+ipfsCluster.allocations.filter(hash, [options], [callback])
 
-ipfsCluster.status([cid], [callback])
-ipfsCluster.sync([cid], [callback])
-ipfsCluster.recover(cid, [options], [callback])
+ipfsCluster.status([cid], [options], [callback])
+ipfsCluster.sync([cid], [options], [callback])
+ipfsCluster.recover([cid], [options], [callback])
 
 ipfsCluster.health.graph([options], [callback])
 ipfsCluster.health.metrics(name, [options], [callback])
 
 ipfsCluster.monitor(name, [options], [callback])
 
-ipfsCluster.version([options], [callback])
+ipfsCluster.version([callback])
 ```
 
 ## Maintainer
