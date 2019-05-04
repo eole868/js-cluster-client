@@ -1,10 +1,17 @@
+<p align="center">
+<img src="https://i.pinimg.com/564x/f4/f9/68/f4f968409552de91c2ff09d2a141f2e4.jpg" alt="ipfs-cluster-api" />
+</p>
+
 # js-ipfs-cluster-api
 
 > A client library for the IPFS Cluster HTTP API, implemented in JavaScript.
 
-<p align="center">
-<img src="https://i.pinimg.com/564x/f4/f9/68/f4f968409552de91c2ff09d2a141f2e4.jpg" alt="ipfs-cluster-api" />
-</p>
+[![Made by](https://img.shields.io/badge/made%20by-Cluster%20Labs-blue.svg?style=flat-square)](https://clusterlabs.io)
+[![Main project](https://img.shields.io/badge/project-ipfscloud-blue.svg?style=flat-square)](http://github.com/cluster-labs/ipfscloud-web)
+
+[![npm version](https://badge.fury.io/js/ipfs-cluster-api.svg)](https://badge.fury.io/js/ipfs-cluster-api)
+
+---
 
 **UNOFFICIAL AND ALPHA**
 
