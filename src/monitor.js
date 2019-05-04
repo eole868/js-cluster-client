@@ -19,7 +19,7 @@ module.exports = (arg) => {
 
     send({
       path: monitorPath,
-      args: opts
+      qs: opts
     }, callback)
   })
 }
