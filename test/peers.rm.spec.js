@@ -10,7 +10,7 @@ describe('peers.rm', () => {
         })
     })
 
-    cluster.peers.ls({protocol: 'http'}, (err, peers) => {
+    cluster.peers.ls((err, peers) => {
         assert.equal(err, null, 'throws error while fetching the list of cluster peers')
         if (peers.length>=2){
             it('removes a cluster peer by id', (done) => {
