@@ -44,6 +44,7 @@ We support both the Current and Active LTS versions of Node.js. Please see [node
 ### Running the daemon with the right port
 
 **ipfs daemon**
+
 To make `ipfs-cluster-service` work, you need to have a `ipfs` local daemon running. It needs to be open on the right port. `5001` is the default, and is used in the examples below, but it can be set to whatever you need.
 
 ```
