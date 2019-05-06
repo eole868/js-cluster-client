@@ -2,6 +2,7 @@
 
 function getCommands() {
   const cmds = {
+    add: require('../add'),
     id: require('../id'),
     peers: require('../peers'),
     pins: require('../pins'),

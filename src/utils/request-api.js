@@ -5,38 +5,80 @@ const once = require('once')
 const request = require('./request')
 const streamToValue = require('./stream-to-value')
 const streamToJsonValue = require('./stream-to-json-value')
+const qsDefaultEncoder = require('qs/lib/utils').encode
+const isNode = require('detect-node')
+const ndjson = require('ndjson')
+const pump = require('pump')
+const log = require('debug')('ipfs-http-client:request')
 
-function parseError (res, callback) {
+function parseError (res, cb) {
   const error = new Error(`Server responded with ${res.statusCode}`)
 
-  // streamToJsonValue(res, (err, payload) => {
-  streamToValue(res, (err, payload) => {
+  streamToJsonValue(res, (err, payload) => {
     if (err) {
-      return callback(err)
+      return cb(err)
     }
 
     if (payload) {
       error.code = payload.Code
       error.message = payload.Message || payload.toString()
+      error.type = payload.Type
     }
-    callback(error)
+    cb(error)
   })
 }
 
-function onRes (buffer, callback) {
+function onRes (buffer, cb) {
   return (res) => {
+    const stream = Boolean(res.headers['x-stream-output'])
+    const chunkedObjects = Boolean(res.headers['x-chunked-output'])
     const isJson = res.headers['content-type'] &&
                    res.headers['content-type'].indexOf('application/json') === 0
 
+    if (res.req) {
+      log(res.req.method, `${res.req.getHeaders().host}${res.req.path}`, res.statusCode, res.statusMessage)
+    } else {
+      log(res.url, res.statusCode, res.statusMessage)
+    }
+
     if (res.statusCode >= 400 || !res.statusCode) {
-      parseError(res, callback)
+      return parseError(res, cb)
     }
 
+    // Return the response stream directly
+    if (stream && !buffer) {
+      //console.log("LOG_0: ", res)
+      return cb(null, res)
+    }
+
+    // Return a stream of JSON objects
+    if (chunkedObjects && isJson) {
+      const outputStream = ndjson.parse()
+      pump(res, outputStream)
+      res.on('end', () => {
+        let err = res.trailers['x-stream-error']
+        if (err) {
+          // Not all errors are JSON
+          try {
+            err = JSON.parse(err)
+          } catch (e) {
+            err = { Message: err }
+          }
+          outputStream.emit('error', new Error(err.Message))
+        }
+      })
+      //console.log("LOG_1: ", outputStream)
+      return cb(null, outputStream)
+    }
+
+    // Return a JSON object
     if (isJson) {
-      return streamToJsonValue(res, callback)
+      //console.log("LOG_2: ", res)
+      return streamToJsonValue(res, cb)
     }
 
-    return streamToValue(res, callback)
+    // Return a value
+    return streamToValue(res, cb)
   }
 }
 
@@ -44,26 +86,72 @@ function requestAPI (config, options, callback) {
   callback = once(callback)
   options.qs = options.qs || {}
 
+  if (Array.isArray(options.path)) {
+    options.path = options.path.join('/')
+  }
+  if (options.args && !Array.isArray(options.args)) {
+    options.args = [options.args]
+  }
+  if (options.args) {
+    options.qs.arg = options.args
+  }
+  if (options.progress) {
+    options.qs.progress = true
+  }
+
+  if (options.qs.r) {
+    options.qs.recursive = options.qs.r
+    // From IPFS 0.4.0, it throws an error when both r and recursive are passed
+    delete options.qs.r
+  }
+
+  options.qs['stream-channels'] = true
+
+  if (options.stream) {
+    options.buffer = false
+  }
+
+  // this option is only used internally, not passed to daemon
+  delete options.qs.followSymlinks
+  ////console.log(options)
   const method = options.method || 'GET'
-  const headers = options.header || {}
+  var headers = options.header || {}
+  headers = Object.assign(headers, config.headers)
+
+
+  if (isNode) {
+    // Browsers do not allow you to modify the user agent
+    headers['User-Agent'] = config['user-agent']
+  }
+
+  if (options.multipart) {
+    if (!options.multipartBoundary) {
+      return callback(new Error('No multipartBoundary'))
+    }
+    
+    headers['Content-Type'] = `multipart/form-data; boundary=${options.multipartBoundary}`
+  }
 
   const qs = Qs.stringify(options.qs, {
     arrayFormat: 'repeat',
-    encoder: (data, qsDefaultEncoder) => {
+    encoder: data => {
+      // TODO: future releases of qs will provide the default
+      // encoder as a 2nd argument to this function; it will
+      // no longer be necessary to import qsDefaultEncoder
       if (Buffer.isBuffer(data)) {
         let uriEncoded = ''
         for (const byte of data) {
           // https://tools.ietf.org/html/rfc3986#page-14
           // ALPHA (%41-%5A and %61-%7A), DIGIT (%30-%39), hyphen (%2D), period (%2E), underscore (%5F), or tilde (%7E)
           if (
-              (byte >= 0x41 && byte <= 0x5A) ||
-              (byte >= 0x61 && byte <= 0x7A) ||
-              (byte >= 0x30 && byte <= 0x39) ||
-              (byte === 0x2D) ||
-              (byte === 0x2E) ||
-              (byte === 0x5F) ||
-              (byte === 0x7E)
-             ) {
+            (byte >= 0x41 && byte <= 0x5A) ||
+            (byte >= 0x61 && byte <= 0x7A) ||
+            (byte >= 0x30 && byte <= 0x39) ||
+            (byte === 0x2D) ||
+            (byte === 0x2E) ||
+            (byte === 0x5F) ||
+            (byte === 0x7E)
+          ) {
             uriEncoded += String.fromCharCode(byte)
           } else {
             const hex = byte.toString(16)
@@ -90,12 +178,9 @@ function requestAPI (config, options, callback) {
     callback(err)
   })
 
-  // if (options.files) { stream.pipe(req) }
-  if (options.data) {
-    req.write(options.data);
+  if (!options.stream) {
+    req.end()
   }
-
-  req.end()
 
   return req
 }
