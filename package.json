@@ -4,6 +4,9 @@
   "description": "A JS client library for the IPFS Cluster HTTP API.",
   "leadMaintainer": "Vaibhav Saini <vasa@towardsblockchain.com>",
   "main": "src/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
   "license": "MIT",
   "dependencies": {
     "async": "^2.6.2",
