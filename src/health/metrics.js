@@ -10,10 +10,13 @@ module.exports = (send) => {
       opts = undefined
     }
 
-    var metricsPath = `health/metrics/${arg}`
+    var monitorPath = 'monitor/metrics';
+    if (arg) {
+      monitorPath += '/' + arg;
+    }
 
     send({
-      path: metricsPath,
+      path: monitorPath,
       qs: opts
     }, callback)
   })

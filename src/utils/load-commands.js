@@ -5,14 +5,12 @@ function getCommands() {
     add: require('../add'),
     id: require('../id'),
     peers: require('../peers'),
-    pins: require('../pins'),
-    allocations: require('../allocations'),
+    pin: require('../pin'),
     status: require('../status'),
     sync: require('../sync'),
     recover: require('../recover'),
     version: require('../version'),
-    health: require('../health'),
-    monitor: require('../monitor')
+    health: require('../health')
   }
 
   return cmds
