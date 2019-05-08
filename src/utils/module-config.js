@@ -1,10 +1,8 @@
 'use strict'
 
-const getConfig = require('./default-config')
 const requestAPI = require('./request-api')
 
 module.exports = (arg) => {
-  const config = getConfig()
 
   if (typeof arg === 'function') {
     return arg

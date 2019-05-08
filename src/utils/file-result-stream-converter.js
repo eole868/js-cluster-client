@@ -10,16 +10,16 @@ const TransformStream = require('readable-stream').Transform
 
   Input object format:
   {
-    Name: '/path/to/file/foo.txt',
-    Hash: 'Qma4hjFTnCasJ8PVp3mZbZK5g2vGDT4LByLJ7m8ciyRFZP'
-    Size: '20'
+    name: '/path/to/file/foo.txt',
+    cid: { '/': 'QmRG3FXAW76xD7ZrjCWk8FKVaTRPYdMtwzJHZ9gArzHK5f' },
+    size: 2417 
   }
 
   Output object format:
   {
     path: '/path/to/file/foo.txt',
-    hash: 'Qma4hjFTnCasJ8PVp3mZbZK5g2vGDT4LByLJ7m8ciyRFZP',
-    size: 20
+    hash: 'QmRG3FXAW76xD7ZrjCWk8FKVaTRPYdMtwzJHZ9gArzHK5f',
+    size: 2417
   }
 */
 class FileResultStreamConverter extends TransformStream {
@@ -29,14 +29,14 @@ class FileResultStreamConverter extends TransformStream {
   }
 
   _transform (obj, enc, callback) {
-    if (!obj.Hash) {
+    if (!obj.name) {
       return callback()
     }
 
     callback(null, {
-      path: obj.Name,
-      hash: obj.Hash,
-      size: parseInt(obj.Size, 10)
+      path: obj.name,
+      hash: obj.cid['/'],
+      size: parseInt(obj.size, 10)
     })
   }
 }
