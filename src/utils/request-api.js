@@ -47,7 +47,6 @@ function onRes (buffer, cb) {
 
     // Return the response stream directly
     if (stream && !buffer) {
-      //console.log("LOG_0: ", res)
       return cb(null, res)
     }
 
@@ -67,13 +66,11 @@ function onRes (buffer, cb) {
           outputStream.emit('error', new Error(err.Message))
         }
       })
-      //console.log("LOG_1: ", outputStream)
       return cb(null, outputStream)
     }
 
     // Return a JSON object
     if (isJson) {
-      //console.log("LOG_2: ", res)
       return streamToJsonValue(res, cb)
     }
 
