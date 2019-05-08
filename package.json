@@ -1,6 +1,6 @@
 {
   "name": "ipfs-cluster-api",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A JS client library for the IPFS Cluster HTTP API.",
   "leadMaintainer": "Vaibhav Saini <vasa@towardsblockchain.com>",
   "main": "src/index.js",
@@ -30,7 +30,8 @@
     "ipfs-cluster",
     "ipfscloud",
     "ipfs-cluster-api",
-    "js",
+    "js-ipfs-cluster",
+    "js-ipfs-http-client",
     "clusterlabs"
   ],
   "contributors": [
