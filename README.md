@@ -130,7 +130,15 @@ If no `content` is passed, then the path is treated as an empty directory
 * recursive(boolean)                        Add directory paths recursively
 
 
-`callback` must follow `function (err, res) {}` signature, where `err` is an error if the operation was not successful. If successful, `res` will be an empty array `[]`, as the Go implementation of `ipfs-cluster` APIs returns `nil` as response.
+`callback` must follow `function (err, res) {}` signature, where `err` is an error if the operation was not successful. If successful, `res` will return an object of following form:
+
+```
+{
+    path: '/path/to/file/foo.txt',
+    hash: 'QmRG3FXAW76xD7ZrjCWk8FKVaTRPYdMtwzJHZ9gArzHK5f',
+    size: 2417
+}
+```
 
 If no `callback` is passed, a promise is returned.
 
