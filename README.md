@@ -22,6 +22,7 @@ This is a port of `ipfs/js-ipfs-api` adapted for the API exposed by `ipfs/ipfs-c
 - [Install](#install)
   - [Running the daemon with the right port](#running-the-daemon-with-the-right-port)
   - [Importing the module and usage](#importing-the-module-and-usage)
+	- [In a web browser through Browserify](#in-a-web-browser)
 - [Usage](#usage)
   - [API Docs](#api)
   - [Callbacks and promises](#callbacks-and-promises)
@@ -61,7 +62,7 @@ To make `ipfs-cluster-service` work, you need to have a `ipfs` local daemon runn
 
 **ipfs-cluster-service daemon**
 
-To interact with the API, you need to have a daemon running. It needs to be open on the right port. `9094` is the default, and is used in the examples below, but it can be set to whatever you need. You can setup `ipfs-cluster-service` by following [**this installation guide**]([https://github.com/ipfs/ipfs-cluster#install](https://github.com/ipfs/ipfs-cluster#install)). 
+To interact with the API, you need to have a daemon running. It needs to be open on the right port. `9094` is the default, and is used in the examples below, but it can be set to whatever you need. You can setup `ipfs-cluster-service` by following [**this installation guide**](https://github.com/ipfs/ipfs-cluster#install). 
 
 After installing run the daemon.
 
@@ -84,8 +85,48 @@ var ipfs = ipfsCluster('/ip4/127.0.0.1/tcp/9094')
 // or using options
 var ipfs = ipfsCluster({ host: 'localhost', port: '9094', protocol: 'http' })
 
+// or specifying a specific API path
+var ipfs = ipfsClient({ host: '1.1.1.1', port: '80', 'api-path': '/some/api/path' })
 ```
 
+### In a web browser
+
+**through Browserify**
+Same as in Node.js, you just have to [browserify](http://browserify.org/) to bundle the code before serving it.
+ > Note: The code uses `es6`, so you have to use [babel](https://babeljs.io/) to convert the code into `es5` before using `browserify`. 
+
+**through webpack**
+Same as in Node.js, you just have to [webpack](https://webpack.js.org/) to bundle the the code before serving it.
+ > Note: The code uses `es6`, so you have to use [babel](https://babeljs.io/) to convert the code into `es5` before using `webpack`.
+**from CDN**
+
+Instead of a local installation (and browserification) you may request a remote copy of IPFS API from unpkg CDN.
+
+To always request the latest version, use the following:
+```
+
+<!-- loading the minified version -->
+<script src="https://unpkg.com/ipfs-cluster-api/dist/src/index.min.js"></script>
+<!-- loading the human-readable (not minified) version -->
+<script src="https://unpkg.com/ipfs-cluster-api/dist/src/index.js"></script>
+
+```
+
+CDN-based IPFS Cluster API provides the `IpfsClusterAPI` constructor as a method of the global `window` object. Example:
+
+```
+
+const cluster = IpfsClusterAPI('127.0.0.1', '9094', {protocol: 'http'})
+
+```
+
+If you omit the host and port, the client will parse `window.host`, and use this information. This also works, and can be useful if you want to write apps that can be run from multiple different gateways:
+
+```
+
+const ipfs = window.IpfsHttpClient()
+
+```
 
 ## Usage
 
