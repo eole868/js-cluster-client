@@ -1,12 +1,12 @@
 'use strict'
 
-const util = require('util')
+const promisify = require('promisify-es6')
 const moduleConfig = require('./utils/module-config')
 
 module.exports = (arg) => {
   const send = moduleConfig(arg)
 
-  return util.promisify((cid, opts, callback) => {
+  return promisify((cid, opts, callback) => {
     if (typeof cid === 'function') {
       callback = cid
       cid = undefined

@@ -9,7 +9,7 @@ const qsDefaultEncoder = require('qs/lib/utils').encode
 const isNode = require('detect-node')
 const ndjson = require('ndjson')
 const pump = require('pump')
-const log = require('debug')('ipfs-http-client:request')
+const log = require('debug')('ipfs-cluster-api:request')
 
 function parseError (res, cb) {
   const error = new Error(`Server responded with ${res.statusCode}`)

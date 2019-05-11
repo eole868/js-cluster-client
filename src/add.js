@@ -1,6 +1,6 @@
 'use strict'
 
-const util = require('util')
+const promisify = require('promisify-es6')
 const ConcatStream = require('concat-stream')
 const once = require('once')
 const isStream = require('is-stream')
@@ -11,7 +11,7 @@ const SendFilesStream = require('./utils/send-files-stream')
 module.exports = (send) => {
   const createAddStream = SendFilesStream(send, 'add')
 
-  const add = util.promisify((_files, options, _callback) => {
+  const add = promisify((_files, options, _callback) => {
     if (typeof options === 'function') {
       _callback = options
       options = null

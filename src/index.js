@@ -11,6 +11,8 @@ function IpfsClusterAPI(host, port, opts) {
   config.port = port || config.port;
   Object.assign(config, opts)
 
+  window.host = config
+
   const requestAPI = getRequestAPI(config)
   const cmds = loadCommands(requestAPI)
   cmds.send = requestAPI
@@ -19,4 +21,5 @@ function IpfsClusterAPI(host, port, opts) {
   return cmds
 }
 
+window.IpfsClusterAPI = IpfsClusterAPI
 exports = module.exports = IpfsClusterAPI
