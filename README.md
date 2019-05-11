@@ -98,6 +98,7 @@ Same as in Node.js, you just have to [browserify](http://browserify.org/) to bun
 **through webpack**
 Same as in Node.js, you just have to [webpack](https://webpack.js.org/) to bundle the the code before serving it.
  > Note: The code uses `es6`, so you have to use [babel](https://babeljs.io/) to convert the code into `es5` before using `webpack`.
+
 **from CDN**
 
 Instead of a local installation (and browserification) you may request a remote copy of IPFS API from unpkg CDN.
