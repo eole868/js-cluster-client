@@ -5,8 +5,8 @@
 <h3 align="center">A Javascript client library for the IPFS Cluster HTTP API.</h3>
 
 [![Made by](https://img.shields.io/badge/made%20by-Cluster%20Labs-blue.svg?style=flat-square)](https://clusterlabs.io) [![Main project](https://img.shields.io/badge/project-ipfscloud-blue.svg?style=flat-square)](http://github.com/cluster-labs/ipfscloud-web) [![npm version](https://badge.fury.io/js/ipfs-cluster-api.svg)](https://badge.fury.io/js/ipfs-cluster-api)
- <a href=""><img src="https://img.shields.io/badge/npm-%3E%3D3.0.0-orange.svg?style=flat-square" /></a> <a href=""><img src="https://img.shields.io/badge/Node.js-%3E%3D10.0.0-orange.svg?style=flat-square" /></a> <a href="https://david-dm.org/cluster-labs/ipfs-cluster-api"><img src="https://david-dm.org/cluster-labs/ipfs-cluster-api.svg?style=flat-square" /></a> <a href="https://bundlephobia.com/result?p=ipfs-cluster-api"><img src="https://flat.badgen.net/bundlephobia/minzip/ipfs-cluster-api"></a> <a href="https://github.com/feross/standard"><img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square"></a>
- 
+ <a href=""><img src="https://img.shields.io/badge/npm-%3E%3D3.0.0-orange.svg?style=flat-square" /></a> <a href=""><img src="https://img.shields.io/badge/Node.js-%3E%3D8.0.0-orange.svg?style=flat-square" /></a> <a href="https://david-dm.org/cluster-labs/ipfs-cluster-api"><img src="https://david-dm.org/cluster-labs/ipfs-cluster-api.svg?style=flat-square" /></a> <a href="https://bundlephobia.com/result?p=ipfs-cluster-api"><img src="https://flat.badgen.net/bundlephobia/minzip/ipfs-cluster-api"></a> <a href="https://github.com/feross/standard"><img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square"></a>
+ [![Join the chat at https://gitter.im/ipfs-cluster-api/community](https://badges.gitter.im/cluster-labs/ipfs-cluster-api.svg)](https://gitter.im/ipfs-cluster-api/community)
 ---
 
 **UNOFFICIAL AND ALPHA**
