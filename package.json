@@ -15,6 +15,7 @@
     "flatmap": "0.0.3",
     "is-pull-stream": "0.0.0",
     "iso-stream-http": "^0.1.2",
+    "multiaddr": "^6.0.6",
     "ndjson": "^1.5.0",
     "once": "^1.4.0",
     "promisify-es6": "^1.0.3",
