@@ -135,13 +135,13 @@ to be similar to `ipfs-cluster-ctl` provided in [`ipfs/ipfs-cluster`](https://gi
 -	[`add`](#adding-&-pinning-data-to-cluster)
 	-	[`cluster.add(data, [options], [callback])`](#add)
 -	[`peers`](#peer-management)
-	-	[`cluster.peers.ls([callback])`](#ls)
-	-	[`cluster.peers.add(addr, [callback])`](#add)
-	-	[`cluster.peers.rm(peerid, [callback])`](#remove)
+	-	[`cluster.peers.ls([callback])`](#peers.ls)
+	-	[`cluster.peers.add(addr, [callback])`](#peers.add)
+	-	[`cluster.peers.rm(peerid, [callback])`](#peers.remove)
 -	[`pin`](#pins-management)
-	-	[`cluster.pin.ls([options], [callback])`](#ls)
-	-	[`cluster.pin.add(cid, [options], [callback])`](#add)
-	-	[`cluster.pin.rm(cid, [options], [callback])`](#remove)
+	-	[`cluster.pin.ls([options], [callback])`](#peers.ls)
+	-	[`cluster.pin.add(cid, [options], [callback])`](#peers.add)
+	-	[`cluster.pin.rm(cid, [options], [callback])`](#peers.remove)
 -	[`health`](#health)
 	- [`cluster.health.graph([options], [callback])`](#graph)
 	- [`cluster.health.metrics(name, [options], [callback])`](#metrics)
@@ -189,9 +189,9 @@ If no `content` is passed, then the path is treated as an empty directory
 
 ```
 {
-	path: '/path/to/file/foo.txt',
-	hash: 'QmRG3FXAW76xD7ZrjCWk8FKVaTRPYdMtwzJHZ9gArzHK5f',
-	size: 2417
+  path: '/path/to/file/foo.txt',
+  hash: 'QmRG3FXAW76xD7ZrjCWk8FKVaTRPYdMtwzJHZ9gArzHK5f',
+  size: 2417
 }
 ```
 
@@ -200,7 +200,7 @@ If no `callback` is passed, a promise is returned.
 ### Example
 ```
 cluster.add(Buffer.from("vasa"), (err, result) => {
-	err ? console.error(err) : console.log(result)
+  err ? console.error(err) : console.log(result)
 })
 ```
 ### Peer management
@@ -208,7 +208,7 @@ cluster.add(Buffer.from("vasa"), (err, result) => {
 
 #### **`peers`**
 
-#### **`ls`**
+#### **`peers.ls`**
 > Lists the peers in the cluster
 	
 This command tells IPFS Cluster to no longer manage a CID. This will trigger unpinning operations in all the IPFS nodes holding the content.
@@ -247,12 +247,12 @@ cluster.peers.ls((err, peers) => {
 ```
 
 	
-#### **`add`**
+#### **`peers.add`**
 > Adds peers to the cluster
 	
 **`cluster.peers.add(addr, [callback])`**
 
-Where `addr` is the [multiaddress](http://multiformats.io/multiaddr/) of the peer to be added.
+Where `addr` is the [multihash](http://multiformats.io/multihash/) of the `peerId` to be added.
 	
 `callback` must follow `function (err) {}` signature, where `err` is an error if the operation was not successful.
 
@@ -260,12 +260,12 @@ If no `callback` is passed, a promise is returned.
 	
 ### Example
 ```
-cluster.peers.add("/ip4/1.2.3.4/tcp/1234/QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx", {}, (err) => {
+cluster.peers.add("QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx", (err) => {
 	err ? console.error(err) : console.log("peer added")
-}
+})
 ```
 
-#### **`remove`**
+#### **`peers.remove`**
 > Removes peer from the cluster
 
 This command removes a peer from the cluster. If the peer is online, it will automatically shut down. All other cluster peers should be online for the operation to succeed, otherwise some nodes may be left with an outdated list of cluster peers.
@@ -282,14 +282,15 @@ If no `callback` is passed, a promise is returned.
 ```
 cluster.peers.rm("QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx", (err) => {
 	err ? console.error(err) : console.log("peer removed") 
-}
+})
 ```
 
 ### Pins management
 > Lists, adds & removes pins from the pinlist of the cluster
 
 #### **`pin`**
-#### **`ls`**
+
+#### **`pin.ls`**
 > Lists the pins in the pinlist
 
 This command will list the CIDs which are tracked by IPFS Cluster and to which peers they are currently allocated. This list does not include any monitoring information about the IPFS status of the CIDs, it merely represents the list of pins which are part of the shared state of the cluster. For IPFS-status information about the pins, use "status".
@@ -313,14 +314,14 @@ This command will list the CIDs which are tracked by IPFS Cluster and to which p
 ```
 cluster.pin.ls({filter: 'all'}, (err, pins) => {
 	err ? console.error(err) : console.log(pins)
-}
+})
 ```
 
 	  
 
 	  
 
-#### **`add`**
+#### **`pin.add`**
 > Adds a pin to the cluster
 	
 This command tells IPFS Cluster to start managing a CID. Depending on the pinning strategy, this will trigger IPFS pin requests. The CID will become part of the Cluster's state and will tracked from this point.
@@ -346,12 +347,12 @@ If no `callback` is passed, a promise is returned.
 ```
 cluster.pin.add(CID, (err) => {
 	err ? console.error(err) : console.log('pin added')
-}
+})
 ```
 
    
 
-#### **`remove`**
+#### **`pin.remove`**
 > Removes a pin from the pinlist
 
 This command tells IPFS Cluster to no longer manage a CID. This will trigger unpinning operations in all the IPFS nodes holding the content.
@@ -399,7 +400,7 @@ If no `callback` is passed, a promise is returned.
 ```
 cluster.id((err, id) => {
 	err ? console.error(err) : console.log(id)
-}
+})
 ```
 
 #### **`version`**
@@ -418,7 +419,7 @@ If no `callback` is passed, a promise is returned.
 ```
 cluster.version((err, version) => {
 	err ? console.error(err) : console.log(version)
-}
+})
 ```
 
 #### **`health`**
@@ -442,7 +443,7 @@ If no `callback` is passed, a promise is returned.
 ```
 cluster.health.graph((err, health) => {
 	err ? console.error(err) : console.log(health)
-}
+})
 ```
 
 #### **`metrics`**
@@ -463,7 +464,7 @@ If no `callback` is passed, a promise is returned.
 ```
 cluster.health.metrics('freespace', (err, metrics) => {
 	err ? console.error(err) : console.log(metrics)
-}
+})
 ```
 
 ####	**`status`**
@@ -509,7 +510,7 @@ const CID = "QmU4xZd9Yj7EzRj5ntw6AJ1VkbWNe1jXRM56KoRLkTxKch"
 
 cluster.status(CID, { filter:  'pinned', local:  true }, (err, res) => {
 	err ? console.error(err) : console.log(res)
-}
+})
 ```
 
 ####	**`sync`**
@@ -541,7 +542,7 @@ const CID = "QmU4xZd9Yj7EzRj5ntw6AJ1VkbWNe1jXRM56KoRLkTxKch"
 
 cluster.sync(CID, { local:  true }, (err) => {
 	err ? console.error(err) : console.log(`${CID} synced`)
-}
+})
 ```
 
 ####	**`recover`**
@@ -572,7 +573,7 @@ const CID = "QmU4xZd9Yj7EzRj5ntw6AJ1VkbWNe1jXRM56KoRLkTxKch"
 
 cluster.recover(CID, { local:  true }, (err) => {
 	err ? console.error(err) : console.log(`${CID} recovered`)
-}
+})
 ```
 
 ## Development
