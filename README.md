@@ -22,7 +22,9 @@ This is a port of `ipfs/js-ipfs-api` adapted for the API exposed by `ipfs/ipfs-c
 - [Install](#install)
   - [Running the daemon with the right port](#running-the-daemon-with-the-right-port)
   - [Importing the module and usage](#importing-the-module-and-usage)
-	- [In a web browser through Browserify](#in-a-web-browser)
+	- [In a web browser through Browserify](#through-browserify)
+	- [In a web browser through Webpack](#through-webpack)
+	- [In a web browser through CDN](#from-cdn)
 - [Usage](#usage)
   - [API Docs](#api)
   - [Callbacks and promises](#callbacks-and-promises)
@@ -36,7 +38,7 @@ This is a port of `ipfs/js-ipfs-api` adapted for the API exposed by `ipfs/ipfs-c
 
 This module uses node.js, and can be installed through npm:
 
-```bash
+```
 npm install --save ipfs-cluster-api
 ```
 
@@ -80,53 +82,47 @@ var ipfsCluster = require('ipfs-cluster-api')
 var cluster = ipfsCluster('localhost', '9094', { protocol: 'http' }) // leaving out the arguments will default to these values
 
 // or connect with multiaddr
-var ipfs = ipfsCluster('/ip4/127.0.0.1/tcp/9094')
+var cluster = ipfsCluster('/ip4/127.0.0.1/tcp/9094')
 
 // or using options
-var ipfs = ipfsCluster({ host: 'localhost', port: '9094', protocol: 'http' })
+var cluster = ipfsCluster({ host: 'localhost', port: '9094', protocol: 'http' })
 
 // or specifying a specific API path
-var ipfs = ipfsClient({ host: '1.1.1.1', port: '80', 'api-path': '/some/api/path' })
+var cluster = ipfsCluster({ host: '1.1.1.1', port: '80', 'api-path': '/some/api/path' })
 ```
 
 ### In a web browser
 
-**through Browserify**
+#### **through Browserify**
 Same as in Node.js, you just have to [browserify](http://browserify.org/) to bundle the code before serving it.
  > Note: The code uses `es6`, so you have to use [babel](https://babeljs.io/) to convert the code into `es5` before using `browserify`. 
 
-**through webpack**
+#### **through webpack**
 Same as in Node.js, you just have to [webpack](https://webpack.js.org/) to bundle the the code before serving it.
  > Note: The code uses `es6`, so you have to use [babel](https://babeljs.io/) to convert the code into `es5` before using `webpack`.
 
-**from CDN**
+#### **from CDN**
 
 Instead of a local installation (and browserification) you may request a remote copy of IPFS API from unpkg CDN.
 
 To always request the latest version, use the following:
 ```
-
 <!-- loading the minified version -->
 <script src="https://unpkg.com/ipfs-cluster-api/dist/src/index.min.js"></script>
 <!-- loading the human-readable (not minified) version -->
 <script src="https://unpkg.com/ipfs-cluster-api/dist/src/index.js"></script>
-
 ```
 
 CDN-based IPFS Cluster API provides the `IpfsClusterAPI` constructor as a method of the global `window` object. Example:
 
 ```
-
 const cluster = IpfsClusterAPI('127.0.0.1', '9094', {protocol: 'http'})
-
 ```
 
 If you omit the host and port, the client will parse `window.host`, and use this information. This also works, and can be useful if you want to write apps that can be run from multiple different gateways:
 
 ```
-
-const ipfs = window.IpfsHttpClient()
-
+const cluster = window.IpfsClusterAPI()
 ```
 
 ## Usage
@@ -134,24 +130,41 @@ const ipfs = window.IpfsHttpClient()
 ### API
 
 The API is currently a work-in-progress. The exposed methods are designed
-to be similar to `ipfs-cluster-ctl` provided in `ipfs/ipfs-cluster`.
+to be similar to `ipfs-cluster-ctl` provided in [`ipfs/ipfs-cluster`](https://github.com/ipfs/ipfs-cluster).
+
+-	[`add`](#adding-&-pinning-data-to-cluster)
+	-	[`cluster.add(data, [options], [callback])`](#add)
+-	[`peers`](#peer-management)
+	-	[`cluster.peers.ls([callback])`](#ls)
+	-	[`cluster.peers.add(addr, [callback])`](#add)
+	-	[`cluster.peers.rm(peerid, [callback])`](#remove)
+-	[`pin`](#pins-management)
+	-	[`cluster.pin.ls([options], [callback])`](#ls)
+	-	[`cluster.pin.add(cid, [options], [callback])`](#add)
+	-	[`cluster.pin.rm(cid, [options], [callback])`](#remove)
+-	[`health`](#health)
+	- [`cluster.health.graph([options], [callback])`](#graph)
+	- [`cluster.health.metrics(name, [options], [callback])`](#metrics)
+-	[`miscellaneous`](#node-management)
+	-	[`cluster.id([callback])`](#id)
+	-	[`cluster.version([callback])`](#version)
+	- [`cluster.status([cid], [options], [callback])`](#status)
+	-	[`cluster.sync([cid], [options], [callback])`](#sync)
+	-	[`cluster.recover([cid], [options], [callback])`](#recover)
+
 
 ### Adding & pinning data to cluster
-* **`add`**
+#### **`add`**
 > Add and pin data to the cluster
 
 Add allows to add and replicate content to several ipfs daemons, performing a Cluster Pin operation on success. It takes elements from local paths as well as from web URLs (accessed with a GET request).
 
 Cluster Add is equivalent to "ipfs add" in terms of DAG building, and supports the same options for adjusting the chunker, the DAG layout etc. However, it will allocate the content and send it directly to the allocated peers (among which may not necessarily be the local ipfs daemon).
 
-Once the adding process is finished, the content is fully added to all
-allocations and pinned in them. This makes cluster add slower than a local
-ipfs add, but the result is a fully replicated CID on completion.
-If you prefer faster adding, add directly to the local IPFS and trigger a
-cluster "pin add".
+Once the adding process is finished, the content is fully added to all allocations and pinned in them. This makes cluster add slower than a local ipfs add, but the result is a fully replicated CID on completion. If you prefer faster adding, add directly to the local IPFS and trigger a cluster "pin add".
 
 
-**`ipfsCluster.add(data, [options], [callback])`**
+**`cluster.add(data, [options], [callback])`**
 
 Where  `data`  may be:
 
@@ -176,9 +189,9 @@ If no `content` is passed, then the path is treated as an empty directory
 
 ```
 {
-    path: '/path/to/file/foo.txt',
-    hash: 'QmRG3FXAW76xD7ZrjCWk8FKVaTRPYdMtwzJHZ9gArzHK5f',
-    size: 2417
+	path: '/path/to/file/foo.txt',
+	hash: 'QmRG3FXAW76xD7ZrjCWk8FKVaTRPYdMtwzJHZ9gArzHK5f',
+	size: 2417
 }
 ```
 
@@ -193,99 +206,98 @@ cluster.add(Buffer.from("vasa"), (err, result) => {
 ### Peer management
 > Lists, adds & removes peers from the cluster
 
-* **`peers`**
+#### **`peers`**
 
-	* **`ls`**
-	> Lists the peers in the cluster
+#### **`ls`**
+> Lists the peers in the cluster
 	
-	This command tells IPFS Cluster to no longer manage a CID. This will
-trigger unpinning operations in all the IPFS nodes holding the content.
+This command tells IPFS Cluster to no longer manage a CID. This will trigger unpinning operations in all the IPFS nodes holding the content.
 
-	When the request has succeeded, the command returns the status of the CID in the cluster. The CID should disappear from the list offered by "pin ls", although unpinning operations in the cluster may take longer or fail.	
+When the request has succeeded, the command returns the status of the CID in the cluster. The CID should disappear from the list offered by "pin ls", although unpinning operations in the cluster may take longer or fail.	
 
-	**`ipfsCluster.peers.ls([callback])`**
+**`cluster.peers.ls([callback])`**
 	
-	`callback` must follow `function (err, res) {}` signature, where `err` is an error if the operation was not successful. If successful, `res` returns a information abount the connected peers in the following form:
-	```
-	[ { id: 'QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
-    addresses:
-     [ '/p2p-circuit/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
-       '/ip4/127.0.0.1/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
-       '/ip4/10.184.9.134/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
-       '/ip4/172.17.0.1/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
-       '/ip4/172.18.0.1/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn' ],
-    cluster_peers: [ 'QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn' ],
-    cluster_peers_addresses: null,
-    version: '0.10.1',
-    commit: '',
-    rpc_protocol_version: '/ipfscluster/0.10/rpc',
-    error: '',
-    ipfs:
-     { id: 'QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx',
-       addresses: [Array],
-       error: '' },
-    peername: 'jarvis' } ]
-	```
+`callback` must follow `function (err, res) {}` signature, where `err` is an error if the operation was not successful. If successful, `res` returns a information abount the connected peers in the following form:
+```
+[ { id: 'QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
+	addresses:
+		[ '/p2p-circuit/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
+			'/ip4/127.0.0.1/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
+			'/ip4/10.184.9.134/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
+			'/ip4/172.17.0.1/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
+			'/ip4/172.18.0.1/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn' ],
+	cluster_peers: [ 'QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn' ],
+	cluster_peers_addresses: null,
+	version: '0.10.1',
+	commit: '',
+	rpc_protocol_version: '/ipfscluster/0.10/rpc',
+	error: '',
+	ipfs:
+		{ id: 'QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx',
+			addresses: [Array],
+			error: '' },
+	peername: 'jarvis' } ]
+```
 
-	### Example
-	```
-	cluster.peers.ls((err, peers) => {
-		err ? console.error(err) : console.log(peers)
-	})
-	```
+### Example
+```
+cluster.peers.ls((err, peers) => {
+	err ? console.error(err) : console.log(peers)
+})
+```
 
 	
-	* **`add`**
-	> Adds peers to the cluster
+#### **`add`**
+> Adds peers to the cluster
 	
-	**`ipfsCluster.peers.add(addr, [callback])`**
+**`cluster.peers.add(addr, [callback])`**
 
-	Where `addr` is the [multiaddress](http://multiformats.io/multiaddr/) of the peer to be added.
+Where `addr` is the [multiaddress](http://multiformats.io/multiaddr/) of the peer to be added.
 	
-	`callback` must follow `function (err) {}` signature, where `err` is an error if the operation was not successful.
+`callback` must follow `function (err) {}` signature, where `err` is an error if the operation was not successful.
 
-	If no `callback` is passed, a promise is returned.
+If no `callback` is passed, a promise is returned.
 	
-	### Example
-	```
-	cluster.peers.add("/ip4/1.2.3.4/tcp/1234/QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx", {}, (err) => {
-		err ? console.error(err) : console.log("peer added")
-	}
-	```
+### Example
+```
+cluster.peers.add("/ip4/1.2.3.4/tcp/1234/QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx", {}, (err) => {
+	err ? console.error(err) : console.log("peer added")
+}
+```
 
-	* **`remove`**
-	> Removes peer from the cluster
+#### **`remove`**
+> Removes peer from the cluster
 
-	This command removes a peer from the cluster. If the peer is online, it will automatically shut down. All other cluster peers should be online for the operation to succeed, otherwise some nodes may be left with an outdated list of cluster peers.
+This command removes a peer from the cluster. If the peer is online, it will automatically shut down. All other cluster peers should be online for the operation to succeed, otherwise some nodes may be left with an outdated list of cluster peers.
 	
-	**`ipfsCluster.peers.rm(peerid, [callback])`**
+**`cluster.peers.rm(peerid, [callback])`**
 
-	Where `peerid` is the `id` of the peer to be removed.
+Where `peerid` is the `id` of the peer to be removed.
 	
-	`callback` must follow `function (err, res) {}` signature, where `err` is an error if the operation was not successful.
+`callback` must follow `function (err, res) {}` signature, where `err` is an error if the operation was not successful.
 
-	If no `callback` is passed, a promise is returned.
+If no `callback` is passed, a promise is returned.
 
-	### Example
-	```
-	cluster.peers.rm("QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx", (err) => {
-		err ? console.error(err) : console.log("peer removed") 
-	}
-	```
+### Example
+```
+cluster.peers.rm("QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx", (err) => {
+	err ? console.error(err) : console.log("peer removed") 
+}
+```
 
 ### Pins management
 > Lists, adds & removes pins from the pinlist of the cluster
 
-* **`pin`**
-	* **`ls`**
-	> Lists the pins in the pinlist
+#### **`pin`**
+#### **`ls`**
+> Lists the pins in the pinlist
 
-	This command will list the CIDs which are tracked by IPFS Cluster and to which peers they are currently allocated. This list does not include any monitoring information about the IPFS status of the CIDs, it merely represents the list of pins which are part of the shared state of the cluster. For IPFS-status information about the pins, use "status".
+This command will list the CIDs which are tracked by IPFS Cluster and to which peers they are currently allocated. This list does not include any monitoring information about the IPFS status of the CIDs, it merely represents the list of pins which are part of the shared state of the cluster. For IPFS-status information about the pins, use "status".
 	
-	**`ipfsCluster.pin.ls([options], [callback])`**    
+**`cluster.pin.ls([options], [callback])`**    
 
-	`options` is an optional object argument that might include the following keys:
-	* `filter`: (default: `pin`)  The filter only takes effect when listing all pins. The possible values are:
+`options` is an optional object argument that might include the following keys:
+* `filter`: (default: `pin`)  The filter only takes effect when listing all pins. The possible values are:
 	  - all
 	  - pin
 	  - meta-pin
@@ -296,90 +308,87 @@ trigger unpinning operations in all the IPFS nodes holding the content.
 
 	If no `callback` is passed, a promise is returned.
 
-	### Example
+### Example
 	
-	```
-	cluster.pin.ls({filter: 'all'}, (err, pins) => {
-		err ? console.error(err) : console.log(pins)
-	}
-	```
+```
+cluster.pin.ls({filter: 'all'}, (err, pins) => {
+	err ? console.error(err) : console.log(pins)
+}
+```
 
 	  
 
 	  
 
-	* **`add`**
-	> Adds a pin to the cluster
+#### **`add`**
+> Adds a pin to the cluster
 	
-	This command tells IPFS Cluster to start managing a CID. Depending on
-	the pinning strategy, this will trigger IPFS pin requests. The CID will
-	become part of the Cluster's state and will tracked from this point.
+This command tells IPFS Cluster to start managing a CID. Depending on the pinning strategy, this will trigger IPFS pin requests. The CID will become part of the Cluster's state and will tracked from this point.
 
-	When the request has succeeded, the command returns the status of the CID in the cluster and should be part of the list offered by "pin ls".
+When the request has succeeded, the command returns the status of the CID in the cluster and should be part of the list offered by "pin ls".
 
-	An optional replication factor can be provided: -1 means "pin everywhere" and 0 means use cluster's default setting. Positive values indicate how many peers should pin this content.
+An optional replication factor can be provided: -1 means "pin everywhere" and 0 means use cluster's default setting. Positive values indicate how many peers should pin this content.
 
-	An optional allocations argument can be provided, allocations should be a comma-separated list of peer IDs on which we want to pin. Peers in allocations are prioritized over automatically-determined ones, but replication factors would stil be respected.
+An optional allocations argument can be provided, allocations should be a comma-separated list of peer IDs on which we want to pin. Peers in allocations are prioritized over automatically-determined ones, but replication factors would stil be respected.
 	
-	**`ipfsCluster.pin.add(cid, [options], [callback])`**
+**`cluster.pin.add(cid, [options], [callback])`**
 
-	Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/)  of the data to be pinned.
+Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/)  of the data to be pinned.
 
-	`options` is an optional object argument that might include the following keys:
-	> TODO: Add options
+`options` is an optional object argument that might include the following keys:
+> TODO: Add options
 	
-	`callback` must follow `function (err) {}` signature, where `err` is an error if the operation was not successful.
+`callback` must follow `function (err) {}` signature, where `err` is an error if the operation was not successful.
 
-	If no `callback` is passed, a promise is returned.
+If no `callback` is passed, a promise is returned.
 
-	### Example
-	```
-	cluster.pin.add(CID, (err) => {
-		err ? console.error(err) : console.log('pin added')
-	}
-	```
+### Example
+```
+cluster.pin.add(CID, (err) => {
+	err ? console.error(err) : console.log('pin added')
+}
+```
 
    
 
-	* **`remove`**
-	> Removes a pin from the pinlist
+#### **`remove`**
+> Removes a pin from the pinlist
 
-	This command tells IPFS Cluster to no longer manage a CID. This will
-trigger unpinning operations in all the IPFS nodes holding the content.
+This command tells IPFS Cluster to no longer manage a CID. This will trigger unpinning operations in all the IPFS nodes holding the content.
 
-	When the request has succeeded, the command returns the status of the CID in the cluster. The CID should disappear from the list offered by "pin ls", although unpinning operations in the cluster may take longer or fail.
+When the request has succeeded, the command returns the status of the CID in the cluster. The CID should disappear from the list offered by "pin ls", although unpinning operations in the cluster may take longer or fail.
 
 	
 	
-	**`ipfsCluster.pin.rm(cid, [options], [callback])`**
+**`cluster.pin.rm(cid, [options], [callback])`**
 
-	Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/) of the data to be unpinned.
+Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/) of the data to be unpinned.
 
-	`options` is an optional object argument that might include the following keys:
-	> TODO: Add options
+`options` is an optional object argument that might include the following keys:
+> TODO: Add options
 
-	`callback` must follow `function (err) {}` signature, where `err` is an error if the operation was not successful.
+`callback` must follow `function (err) {}` signature, where `err` is an error if the operation was not successful.
 
-	If no `callback` is passed, a promise is returned.
+If no `callback` is passed, a promise is returned.
 
-	### Example
-	```
-	const CID = "QmU4xZd9Yj7EzRj5ntw6AJ1VkbWNe1jXRM56KoRLkTxKch"
-	
-	cluster.pin.rm(CID, (err) => {
-		err ? console.error(err) : console.log(`${CID} unpinned`)
-	})
-	```
+### Example
+```
+const CID = "QmU4xZd9Yj7EzRj5ntw6AJ1VkbWNe1jXRM56KoRLkTxKch"
+
+cluster.pin.rm(CID, (err) => {
+	err ? console.error(err) : console.log(`${CID} unpinned`)
+})
+```
 
 
 
 #### Node management
-* **`id`**
+#### **`id`**
 > Gets the connected peer's name, address info
 
 This command displays information about the peer that the tool is contacting.
 
-**`ipfsCluster.id([callback])`**
+**`cluster.id([callback])`**
 
 `callback` must follow `function (err, id) {}` signature, where `err` is an error if the operation was not successful. If successful, `id` returns the information about the peer that the tool is contacting.
 
@@ -393,13 +402,13 @@ cluster.id((err, id) => {
 }
 ```
 
-* **`version`**
+#### **`version`**
 > Gets the current version of IPFS Cluster version
 
 This command retrieves the IPFS Cluster version and can be used
 to check that it matches the CLI version 
 
-**`ipfsCluster.version([callback])`**
+**`cluster.version([callback])`**
 
 `callback` must follow `function (err, version) {}` signature, where `err` is an error if the operation was not successful. If successful, `version` will return the IPFS Cluster version.
 
@@ -412,65 +421,64 @@ cluster.version((err, version) => {
 }
 ```
 
-* **`health`**
-	*  **`ipfsCluster.health.graph([options], [callback])`**
-	> Lists the health graph of the cluster
+#### **`health`**
 
-	This command queries all connected cluster peers and their ipfs peers to generate a graph of the connections.  Output is a dot file encoding the cluster's connection state.
+#### **`graph`**
+> Lists the health graph of the cluster
 
-	`options` is an optional object argument that might include the following keys:
-	> TODO: add options
+This command queries all connected cluster peers and their ipfs peers to generate a graph of the connections.  Output is a dot file encoding the cluster's connection state.
 
-	`callback` must follow `function (err, graph) {}` signature, where `err` is an error if the operation was not successful. If successful, `graph` returns the cluster's current state.
+*  **`cluster.health.graph([options], [callback])`**
 
-	If no `callback` is passed, a promise is returned.
+`options` is an optional object argument that might include the following keys:
+> TODO: add options
 
-	### Example
+`callback` must follow `function (err, graph) {}` signature, where `err` is an error if the operation was not successful. If successful, `graph` returns the cluster's current state.
 
-	```
-	cluster.health.graph((err, health) => {
-		err ? console.error(err) : console.log(health)
-	}
-	```
-	
-	* **`ipfsCluster.health.metrics(name, [options], [callback])`**
-	> Lists the health metrics of the cluster
-	
-	This commands displays the latest valid metrics of the given type logged by this peer for all current cluster peers.
+If no `callback` is passed, a promise is returned.
 
-	`type` is the type of the monitoring desired(`freespace` OR `ping`)
+#### Example
 
-	 `callback` must follow `function (err, metrics) {}` signature, where `err` is an error if the operation was not successful. If successful, `metrics` returns the desired metrics.
-	 
-	 If no `callback` is passed, a promise is returned.
+```
+cluster.health.graph((err, health) => {
+	err ? console.error(err) : console.log(health)
+}
+```
 
-	### Example
+#### **`metrics`**
+> Lists the health metrics of the cluster
 
-	```
-	cluster.health.metrics('freespace', (err, metrics) => {
-		err ? console.error(err) : console.log(metrics)
-	}
-	````
+This commands displays the latest valid metrics of the given type logged by this peer for all current cluster peers.
 
-*	**`status`**
-> Retrieves the status of the CIDs tracked by IPFS
-Cluster
+* **`cluster.health.metrics(name, [options], [callback])`**
 
-This command retrieves the status of the CIDs tracked by IPFS
-Cluster, including which member is pinning them and any errors.
-If a CID is provided, the status will be only fetched for a single
-item.  Metadata CIDs are included in the status response
+`type` is the type of the monitoring desired(`freespace` OR `ping`)
 
-The status of a CID may not be accurate. A manual sync can be triggered
-with "sync".
+`callback` must follow `function (err, metrics) {}` signature, where `err` is an error if the operation was not successful. If successful, `metrics` returns the desired metrics.
 
-When the `local` option is set, it will only fetch the status from the
-contacted cluster peer. By default, status will be fetched from all peers.
+If no `callback` is passed, a promise is returned.
 
-When the `filter` option is set, it will only fetch the peer information
-where status of the pin matches at least one of the filter values.
+### Example
 
-**`ipfsCluster.status([cid], [options], [callback])`**
+```
+cluster.health.metrics('freespace', (err, metrics) => {
+	err ? console.error(err) : console.log(metrics)
+}
+```
+
+####	**`status`**
+> Retrieves the status of the CIDs tracked by IPFS Cluster
+
+This command retrieves the status of the CIDs tracked by IPFS Cluster, including which member is pinning them and any errors. If a CID is provided, the status will be only fetched for a single
+item. Metadata CIDs are included in the status response
+
+The status of a CID may not be accurate. A manual sync can be triggered with "sync".
+
+When the `local` option is set, it will only fetch the status from the contacted cluster peer. By default, status will be fetched from all peers.
+
+When the `filter` option is set, it will only fetch the peer information where status of the pin matches at least one of the filter values.
+
+**`cluster.status([cid], [options], [callback])`**
 
 Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/) of the data for which we need the status.
 
@@ -504,24 +512,18 @@ cluster.status(CID, { filter:  'pinned', local:  true }, (err, res) => {
 }
 ```
 
-*	**`sync`**
+####	**`sync`**
 > Syncs the pinset/CID across all the peers in the cluster
 
-This command asks Cluster peers to verify that the current status of tracked
-CIDs is accurate by triggering queries to the IPFS daemons that pin them.
-If a CID is provided, the sync and recover operations will be limited to
-that single item.
+This command asks Cluster peers to verify that the current status of tracked CIDs is accurate by triggering queries to the IPFS daemons that pin them. If a CID is provided, the sync and recover operations will be limited to that single item.
 
-Unless providing a specific CID, the command will output only items which
-have changed status because of the sync or are in error state in some node,
-therefore, the output should be empty if no operations were performed.
+Unless providing a specific CID, the command will output only items which have changed status because of the sync or are in error state in some node, therefore, the output should be empty if no operations were performed.
 
 CIDs in error state may be manually recovered with "recover".
 
-When the `local` option is passed, it will only trigger sync
-operations on the contacted peer. By default, all peers will sync.
+When the `local` option is passed, it will only trigger sync operations on the contacted peer. By default, all peers will sync.
 
-**`ipfsCluster.sync([cid], [options], [callback])`**
+**`cluster.sync([cid], [options], [callback])`**
 
 Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/) of the data to be synced.
 
@@ -542,21 +544,17 @@ cluster.sync(CID, { local:  true }, (err) => {
 }
 ```
 
-*	**`recover`**
+####	**`recover`**
 > re-track or re-forget CIDs in error state
 
-This command asks Cluster peers to re-track or re-forget CIDs in
-error state, usually because the IPFS pin or unpin operation has failed.
+This command asks Cluster peers to re-track or re-forget CIDs in error state, usually because the IPFS pin or unpin operation has failed.
 
-The command will wait for any operations to succeed and will return the status
-of the item upon completion. Note that, when running on the full sets of tracked
-CIDs (without argument), it may take a considerably long time.
+The command will wait for any operations to succeed and will return the status of the item upon completion. Note that, when running on the full sets of tracked CIDs (without argument), it may take a considerably long time.
 
-When the `local` option is set, it will only trigger recover
-operations on the contacted peer (as opposed to on every peer).
+When the `local` option is set, it will only trigger recover operations on the contacted peer (as opposed to on every peer).
 
 
-**`ipfsCluster.recover([cid], [options], [callback])`**
+**`cluster.recover([cid], [options], [callback])`**
 
 Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/) of the data to be recovered.
 
@@ -592,7 +590,10 @@ The `ipfs-cluster-api` is a work in progress. As such, there's a few things you 
 	- ensure quality and
 	- reduce possible future bugs.
 - **Add tests**. There can never be enough tests.
-- **Contribute to the [FAQ repository](https://github.com/ipfs/faq/issues)** with any questions you have about IPFS or any of the relevant technology. A good example would be asking, 'What is a merkledag tree?'. If you don't know a term, odds are, someone else doesn't either. Eventually, we should have a good understanding of where we need to improve communications and teaching together to make IPFS and IPN better.
+
+You can also checkout our **[other projects](https://github.com/cluster-labs)**
+
+It's recommended to follow the [Contribution Guidelines](https://github.com/ipfs/community/blob/master/CONTRIBUTING_JS.md).
 
 ## Historical Context
 
