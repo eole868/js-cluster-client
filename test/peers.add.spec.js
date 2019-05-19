@@ -11,7 +11,7 @@ describe('peers.add', () => {
     })
 
     /* it('adds a cluster peer', (done) => {
-        cluster.peers.add("/ip4/1.2.3.4/tcp/1234/<peerid>", {}, (err) => {
+        cluster.peers.add("QmdsFjUhzJ4iaEymronfj1DZpCHnwnSzK5G3uU5k2N8gp9", (err) => {
             assert.notExists(err, 'throws error while fetching the list of cluster peers')
             done()
         })
