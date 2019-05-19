@@ -1,3 +1,17 @@
+## [0.0.6](https://github.com/cluster-labs/ipfs-cluster-api/compare/v0.0.6...v0.0.5) (2019-05-20)
+
+### Bug Fixes
+
+- importing IpfsCluster in multiple ways ([#4](https://github.com/cluster-labs/ipfs-cluster-api/issues/4))([
+d7da873](https://github.com/cluster-labs/ipfs-cluster-api/commit/d7da873c9615cf60a0a829bd02b45965c1455e89))
+
+- Not able to ADD peer to a cluster using HTTP endpoint ([#5](https://github.com/cluster-labs/ipfs-cluster-api/issues/5))([
+44659ce](https://github.com/cluster-labs/ipfs-cluster-api/commit/44659cedca17dc97bde7e4508e64dd3470d004ac))
+
+### Other Improvements
+
+-   Added Extensive documentation for available `option`(s) for various commands
+
 ## [0.0.5](https://github.com/cluster-labs/ipfs-cluster-api/compare/v0.0.3...v0.0.5) (2019-05-11)
 
 ### Bug Fixes
