@@ -192,7 +192,22 @@ If no `content` is passed, then the path is treated as an empty directory
 
 
 `options` is an optional object argument that might include the following keys:
-* recursive(boolean)                        Add directory paths recursively
+-	`replication-min` (int, default: 0):	Sets the minimum replication factor for pinning this file
+-	`replication-max` (int, default: 0):	Sets the maximum replication factor for pinning this: file
+-	`name` (string, default: ""):	Sets a name for this pin
+-	`shard` (bool, default: false)	
+-	`shard-size` (int, default: 0)
+-	`recursive` (bool, default: false):	Add directory paths recursively
+-	`layout` (string, default: false):	Dag layout to use for dag generation: balanced or trickle
+-	`chunker` (string, default: "size-262144"):		'size-[size]' or 'rabin-[min]-[avg]-[max]'
+-	`raw-leaves` (bool, default: false):	Use raw blocks for leaves
+-	`hidden` (bool, default: false):	Include files that are hidden.  Only takes effect on recursive add
+-	`wrap-with-directory` (bool, default: false):	Wrap a with a directory object
+-	`progress` (bool, default: false)	
+-	`cid-version` (int, default: 0)
+-	`hash` (string, default: "sha2-256"):	Hash function to use. Implies cid-version=1
+-	`stream-channels` (bool, default: true)	
+-	`nocopy` (bool, default: false):	Add the URL using filestore. Implies raw-leaves
 
 
 `callback` must follow `function (err, res) {}` signature, where `err` is an error if the operation was not successful. If successful, `res` will return an object of following form:
@@ -229,24 +244,24 @@ When the request has succeeded, the command returns the status of the CID in the
 	
 `callback` must follow `function (err, res) {}` signature, where `err` is an error if the operation was not successful. If successful, `res` returns a information abount the connected peers in the following form:
 ```json
-[ { id: 'QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
-	addresses:
-		[ '/p2p-circuit/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
-			'/ip4/127.0.0.1/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
-			'/ip4/10.184.9.134/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
-			'/ip4/172.17.0.1/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
-			'/ip4/172.18.0.1/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn' ],
-	cluster_peers: [ 'QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn' ],
-	cluster_peers_addresses: null,
-	version: '0.10.1',
-	commit: '',
-	rpc_protocol_version: '/ipfscluster/0.10/rpc',
-	error: '',
-	ipfs:
-		{ id: 'QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx',
-			addresses: [Array],
-			error: '' },
-	peername: 'jarvis' } ]
+[ { "id": "QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn",
+	"addresses":
+		[ "/p2p-circuit/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn",
+			"/ip4/127.0.0.1/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn",
+			"/ip4/10.184.9.134/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn",
+			"/ip4/172.17.0.1/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn",
+			"/ip4/172.18.0.1/tcp/9096/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn" ],
+	"cluster_peers": [ "QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn" ],
+	"cluster_peers_addresses": null,
+	"version": "0.10.1",
+	"commit": "",
+	"rpc_protocol_version": "/ipfscluster/0.10/rpc",
+	"error": "",
+	"ipfs":
+		{ "id": "QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx",
+			"addresses": [/*Array*/],
+			"error": "" },
+	"peername": "jarvis" } ]
 ```
 
 ### Example
@@ -347,8 +362,13 @@ An optional allocations argument can be provided, allocations should be a comma-
 Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/)  of the data to be pinned.
 
 `options` is an optional object argument that might include the following keys:
-> TODO: Add options
-	
+-	`replication-min`	(int, default: 0):	Sets the minimum replication factor for this pin	
+-	`replication-max`	(int, default: 0):	Sets the maximum replication factor for this pin
+-	`replication`	(int, default: 0):	Sets a custom replication factor (overrides `replication-min` and `replication-max`)
+-	`name`	(int, default: ""):	Sets a name for this pin
+-	`user-allocations`: (string array): Optional comma-separated list of peer IDs where data will be pinned
+-	`shard_size`	(int, default: 0)
+
 `callback` must follow `function (err) {}` signature, where `err` is an error if the operation was not successful.
 
 If no `callback` is passed, a promise is returned.
@@ -371,12 +391,9 @@ When the request has succeeded, the command returns the status of the CID in the
 
 	
 	
-**`cluster.pin.rm(cid, [options], [callback])`**
+**`cluster.pin.rm(cid, [callback])`**
 
 Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/) of the data to be unpinned.
-
-`options` is an optional object argument that might include the following keys:
-> TODO: Add options
 
 `callback` must follow `function (err) {}` signature, where `err` is an error if the operation was not successful.
 
@@ -439,10 +456,7 @@ cluster.version((err, version) => {
 
 This command queries all connected cluster peers and their ipfs peers to generate a graph of the connections.  Output is a dot file encoding the cluster's connection state.
 
-*  **`cluster.health.graph([options], [callback])`**
-
-`options` is an optional object argument that might include the following keys:
-> TODO: add options
+*  **`cluster.health.graph([callback])`**
 
 `callback` must follow `function (err, graph) {}` signature, where `err` is an error if the operation was not successful. If successful, `graph` returns the cluster's current state.
 
@@ -461,7 +475,7 @@ cluster.health.graph((err, health) => {
 
 This commands displays the latest valid metrics of the given type logged by this peer for all current cluster peers.
 
-* **`cluster.health.metrics(name, [options], [callback])`**
+* **`cluster.health.metrics(type, [callback])`**
 
 `type` is the type of the monitoring desired(`freespace` OR `ping`)
 
