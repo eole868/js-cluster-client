@@ -1,7 +1,7 @@
 const cluster = require('./helpers')
 const assert = require('chai').assert
 
-const CID = "QmRAQB6YaCyidP37UdDnjFY5vQuiBrcqdyoW1CuDgwxkD4"
+const CID = "QmYfGFTxovH4pU4EQymD875ArcmizJon8n1iBVXpSZbwvG"
 
 describe('pin.add', () => {
     it('pins a CID in the cluster (without options)', (done) => {
