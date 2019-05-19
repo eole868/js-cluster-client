@@ -10,7 +10,7 @@ module.exports = (send) => {
     }
 
     var peerAddBody = {
-      "peer_multiaddress": arg
+      "peer_id": arg
     }
 
     send({

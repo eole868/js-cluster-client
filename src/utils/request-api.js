@@ -110,7 +110,7 @@ function requestAPI (config, options, callback) {
 
   // this option is only used internally, not passed to daemon
   delete options.qs.followSymlinks
-  ////console.log(options)
+
   const method = options.method || 'GET'
   var headers = options.header || {}
   headers = Object.assign(headers, config.headers)
@@ -176,6 +176,9 @@ function requestAPI (config, options, callback) {
   })
 
   if (!options.stream) {
+    if(options.data) {
+      req.write(options.data)
+    }
     req.end()
   }
 
