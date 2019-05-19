@@ -76,19 +76,19 @@ After installing run the daemon.
 ### Importing the module and usage
 
 ```javascript
-var ipfsCluster = require('ipfs-cluster-api')
+const ipfsCluster = require('ipfs-cluster-api')
 
 // connect to ipfs daemon API server
-var cluster = ipfsCluster('localhost', '9094', { protocol: 'http' }) // leaving out the arguments will default to these values
+const cluster = ipfsCluster('localhost', '9094', { protocol: 'http' }) // leaving out the arguments will default to these values
 
 // or connect with multiaddr
-var cluster = ipfsCluster('/ip4/127.0.0.1/tcp/9094')
+const cluster = ipfsCluster('/ip4/127.0.0.1/tcp/9094')
 
 // or using options
-var cluster = ipfsCluster({ host: 'localhost', port: '9094', protocol: 'http' })
+const cluster = ipfsCluster({ host: 'localhost', port: '9094', protocol: 'http' })
 
 // or specifying a specific API path
-var cluster = ipfsCluster({ host: '1.1.1.1', port: '80', 'api-path': '/some/api/path' })
+const cluster = ipfsCluster({ host: '1.1.1.1', port: '80', 'api-path': '/some/api/path' })
 ```
 
 ### In a web browser
@@ -106,7 +106,7 @@ Same as in Node.js, you just have to [webpack](https://webpack.js.org/) to bundl
 Instead of a local installation (and browserification) you may request a remote copy of IPFS API from unpkg CDN.
 
 To always request the latest version, use the following:
-```
+```html
 <!-- loading the minified version -->
 <script src="https://unpkg.com/ipfs-cluster-api/dist/src/index.min.js"></script>
 <!-- loading the human-readable (not minified) version -->
@@ -115,13 +115,23 @@ To always request the latest version, use the following:
 
 CDN-based IPFS Cluster API provides the `IpfsClusterAPI` constructor as a method of the global `window` object. Example:
 
-```
-const cluster = IpfsClusterAPI('127.0.0.1', '9094', {protocol: 'http'})
+```javascript
+// connect to ipfs daemon API server
+const cluster = IpfsClusterAPI('localhost', '9094', { protocol: 'http' }) // leaving out the arguments will default to these values
+
+// or connect with multiaddr
+const cluster = IpfsClusterAPI('/ip4/127.0.0.1/tcp/9094')
+
+// or using options
+const cluster = IpfsClusterAPI({ host: 'localhost', port: '9094', protocol: 'http' })
+
+// or specifying a specific API path
+const cluster = IpfsClusterAPI({ host: '1.1.1.1', port: '80', 'api-path': '/some/api/path' })
 ```
 
 If you omit the host and port, the client will parse `window.host`, and use this information. This also works, and can be useful if you want to write apps that can be run from multiple different gateways:
 
-```
+```javascript
 const cluster = window.IpfsClusterAPI()
 ```
 
@@ -172,7 +182,7 @@ Where  `data`  may be:
 -   a  [`Readable Stream`](https://www.npmjs.com/package/readable-stream)
 -   a  [`Pull Stream`](https://www.npmjs.com/package/pull-stream)
 -   an array of objects, each of the form:
-```
+```javascript
 {
   path: '/tmp/myfile.txt', // The file path
   content: <data> // A Buffer, Readable Stream or Pull Stream with the contents of the file
@@ -187,7 +197,7 @@ If no `content` is passed, then the path is treated as an empty directory
 
 `callback` must follow `function (err, res) {}` signature, where `err` is an error if the operation was not successful. If successful, `res` will return an object of following form:
 
-```
+```javascript
 {
   path: '/path/to/file/foo.txt',
   hash: 'QmRG3FXAW76xD7ZrjCWk8FKVaTRPYdMtwzJHZ9gArzHK5f',
@@ -198,7 +208,7 @@ If no `content` is passed, then the path is treated as an empty directory
 If no `callback` is passed, a promise is returned.
 
 ### Example
-```
+```javascript
 cluster.add(Buffer.from("vasa"), (err, result) => {
   err ? console.error(err) : console.log(result)
 })
@@ -218,7 +228,7 @@ When the request has succeeded, the command returns the status of the CID in the
 **`cluster.peers.ls([callback])`**
 	
 `callback` must follow `function (err, res) {}` signature, where `err` is an error if the operation was not successful. If successful, `res` returns a information abount the connected peers in the following form:
-```
+```json
 [ { id: 'QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
 	addresses:
 		[ '/p2p-circuit/ipfs/QmPq34QAMCFLNTXWtM3pc7qeQ2kneuCgLZjSVywWoEumRn',
@@ -240,7 +250,7 @@ When the request has succeeded, the command returns the status of the CID in the
 ```
 
 ### Example
-```
+```javascript
 cluster.peers.ls((err, peers) => {
 	err ? console.error(err) : console.log(peers)
 })
@@ -259,7 +269,7 @@ Where `addr` is the [multihash](http://multiformats.io/multihash/) of the `peerI
 If no `callback` is passed, a promise is returned.
 	
 ### Example
-```
+```javascript
 cluster.peers.add("QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx", (err) => {
 	err ? console.error(err) : console.log("peer added")
 })
@@ -279,7 +289,7 @@ Where `peerid` is the `id` of the peer to be removed.
 If no `callback` is passed, a promise is returned.
 
 ### Example
-```
+```javascript
 cluster.peers.rm("QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx", (err) => {
 	err ? console.error(err) : console.log("peer removed") 
 })
@@ -311,7 +321,7 @@ This command will list the CIDs which are tracked by IPFS Cluster and to which p
 
 ### Example
 	
-```
+```javascript
 cluster.pin.ls({filter: 'all'}, (err, pins) => {
 	err ? console.error(err) : console.log(pins)
 })
@@ -344,7 +354,7 @@ Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/)  of the data
 If no `callback` is passed, a promise is returned.
 
 ### Example
-```
+```javascript
 cluster.pin.add(CID, (err) => {
 	err ? console.error(err) : console.log('pin added')
 })
@@ -373,7 +383,7 @@ Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/) of the data 
 If no `callback` is passed, a promise is returned.
 
 ### Example
-```
+```javascript
 const CID = "QmU4xZd9Yj7EzRj5ntw6AJ1VkbWNe1jXRM56KoRLkTxKch"
 
 cluster.pin.rm(CID, (err) => {
@@ -397,7 +407,7 @@ If no `callback` is passed, a promise is returned.
 
 ### Example
 
-```
+```javascript
 cluster.id((err, id) => {
 	err ? console.error(err) : console.log(id)
 })
@@ -416,7 +426,7 @@ to check that it matches the CLI version
 If no `callback` is passed, a promise is returned.
 
 ### Example
-```
+```javascript
 cluster.version((err, version) => {
 	err ? console.error(err) : console.log(version)
 })
@@ -440,7 +450,7 @@ If no `callback` is passed, a promise is returned.
 
 #### Example
 
-```
+```javascript
 cluster.health.graph((err, health) => {
 	err ? console.error(err) : console.log(health)
 })
@@ -461,7 +471,7 @@ If no `callback` is passed, a promise is returned.
 
 ### Example
 
-```
+```javascript
 cluster.health.metrics('freespace', (err, metrics) => {
 	err ? console.error(err) : console.log(metrics)
 })
@@ -505,7 +515,7 @@ Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/) of the data 
 If no `callback` is passed, a promise is returned.
 
 ### Example
-```
+```javascript
 const CID = "QmU4xZd9Yj7EzRj5ntw6AJ1VkbWNe1jXRM56KoRLkTxKch"
 
 cluster.status(CID, { filter:  'pinned', local:  true }, (err, res) => {
@@ -537,7 +547,7 @@ If no `callback` is passed, a promise is returned.
 
 ### Example
 
-```
+```javascript
 const CID = "QmU4xZd9Yj7EzRj5ntw6AJ1VkbWNe1jXRM56KoRLkTxKch"
 
 cluster.sync(CID, { local:  true }, (err) => {
@@ -568,7 +578,7 @@ operations on the contacted peer
 If no `callback` is passed, a promise is returned.
 
 ### Example
-```
+```javascript
 const CID = "QmU4xZd9Yj7EzRj5ntw6AJ1VkbWNe1jXRM56KoRLkTxKch"
 
 cluster.recover(CID, { local:  true }, (err) => {
