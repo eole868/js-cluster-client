@@ -5,8 +5,8 @@
   "leadMaintainer": "Vaibhav Saini <vasa@towardsblockchain.com>",
   "main": "src/index.js",
   "scripts": {
-    "test": "nyc mocha",
-    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
+    "test": "mocha",
+    "test:coverage": "istanbul cover _mocha"
   },
   "license": "MIT",
   "dependencies": {
