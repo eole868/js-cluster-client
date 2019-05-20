@@ -6,3 +6,7 @@ assets
 **/node_modules
 **/*.log
 **/*.swp
+
+.nyc_output
+coverage
+*.lcov
