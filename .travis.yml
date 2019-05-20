@@ -11,10 +11,8 @@ os:
   - osx
 
 install:
-  - npm i -g codecov mocha nyc
+  - npm i
+  - npm i -g istanbul
   
 script:
-  - npm run test
-  - npm run report-coverage
-
-
+  - npm run test:coverage
