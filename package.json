@@ -6,7 +6,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "mocha",
-    "test:coverage": "istanbul cover _mocha"
+    "test:coverage": "codecov"
   },
   "license": "MIT",
   "dependencies": {
