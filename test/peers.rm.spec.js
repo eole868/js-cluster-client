@@ -4,7 +4,7 @@ const assert = require('chai').assert
 describe('peers.rm', () => {
     
     it('throws error while removing peer with invalid id', (done) => {
-        cluster.peers.rm("invalidID", {}, (err) => {
+        cluster.peers.rm("invalidID", (err) => {
             assert.notDeepEqual(err, null, "removes peer with invalid id")
             done()
         })

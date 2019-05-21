@@ -22,4 +22,11 @@ describe('add', () => {
             done()
         })
     })
+
+    it('throws error while adding a string as arg param', (done) => {
+        cluster.add('vasa', (err, result) => {
+            assert.exists(err, 'does not throw error while adding a string as arg param')
+            done()
+        })
+    })
 })

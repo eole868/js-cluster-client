@@ -95,4 +95,11 @@ describe('status', () => {
             done()
         })
     })
+
+    it('lists current status', (done) => {
+        cluster.status((err, details) => {
+            assert.notExists(err, 'throws error while listing current status')
+            done()
+        })
+    })
 })
