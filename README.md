@@ -148,7 +148,6 @@ to be similar to `ipfs-cluster-ctl` provided in [`ipfs/ipfs-cluster`](https://gi
 	-	[`cluster.add(data, [options], [callback])`](#add)
 -	[`peers`](#peer-management)
 	-	[`cluster.peers.ls([callback])`](#peers.ls)
-	-	[`cluster.peers.add(addr, [callback])`](#peers.add)
 	-	[`cluster.peers.rm(peerid, [callback])`](#peers.remove)
 -	[`pin`](#pins-management)
 	-	[`cluster.pin.ls([options], [callback])`](#peers.ls)
@@ -270,25 +269,6 @@ When the request has succeeded, the command returns the status of the CID in the
 ```javascript
 cluster.peers.ls((err, peers) => {
 	err ? console.error(err) : console.log(peers)
-})
-```
-
-	
-#### **`peers.add`**
-> Adds peers to the cluster
-	
-**`cluster.peers.add(addr, [callback])`**
-
-Where `addr` is the [multihash](http://multiformats.io/multihash/) of the `peerId` to be added.
-	
-`callback` must follow `function (err) {}` signature, where `err` is an error if the operation was not successful.
-
-If no `callback` is passed, a promise is returned.
-	
-### Example
-```javascript
-cluster.peers.add("QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx", (err) => {
-	err ? console.error(err) : console.log("peer added")
 })
 ```
 
