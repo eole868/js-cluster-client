@@ -12,7 +12,7 @@ os:
 
 install:
   - npm i
-  - npm i -g istanbul
+  - npm i -g codecov
   
 script:
   - npm run test:coverage
