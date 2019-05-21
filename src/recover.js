@@ -6,24 +6,21 @@ const moduleConfig = require('./utils/module-config')
 module.exports = (arg) => {
   const send = moduleConfig(arg)
 
-  return promisify((args, opts, callback) => {
-    
-    if (typeof args == 'function') {
-      callback = args
-      args = undefined
-    }
-
+  return promisify((args, opts, callback) => {    
     if(typeof opts == 'function') {
       callback = opts
-      if(args == 'string') {
-        opts = undefined
-      }
-      else{
+      if(typeof args !== 'string') {
         opts = args
         args = undefined
       }
+      else {
+        opts = undefined
+      }
     }
-
+    if(typeof args === 'function') {
+      callback = args
+      args = undefined
+    }
     var recoverPath = 'pins/recover'
 
     if(args) {
@@ -33,7 +30,7 @@ module.exports = (arg) => {
     send({
       method: 'POST',
       path: recoverPath,
-      qs: opts
+      qs: opts || { local: true }
     }, callback)
   })
 }

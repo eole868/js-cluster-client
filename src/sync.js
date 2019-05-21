@@ -10,10 +10,11 @@ module.exports = (arg) => {
     if (typeof cid == 'function') {
       callback = cid
       cid = undefined
+      opts = undefined
     }
     if(typeof opts == 'function') {
       callback = opts
-      if(cid == 'string') {
+      if(typeof cid == 'string') {
         opts = undefined
       }
       else{
