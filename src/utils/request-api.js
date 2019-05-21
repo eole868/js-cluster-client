@@ -176,9 +176,6 @@ function requestAPI (config, options, callback) {
   })
 
   if (!options.stream) {
-    if(options.data) {
-      req.write(options.data)
-    }
     req.end()
   }
 
