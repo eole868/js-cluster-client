@@ -147,15 +147,15 @@ to be similar to `ipfs-cluster-ctl` provided in [`ipfs/ipfs-cluster`](https://gi
 -	[`add`](#adding-&-pinning-data-to-cluster)
 	-	[`cluster.add(data, [options], [callback])`](#add)
 -	[`peers`](#peer-management)
-	-	[`cluster.peers.ls([callback])`](#peers.ls)
-	-	[`cluster.peers.rm(peerid, [callback])`](#peers.remove)
+	-	[`cluster.peers.ls([callback])`](#peersls)
+	-	[`cluster.peers.rm(peerid, [callback])`](#peersremove)
 -	[`pin`](#pins-management)
-	-	[`cluster.pin.ls([options], [callback])`](#peers.ls)
-	-	[`cluster.pin.add(cid, [options], [callback])`](#peers.add)
-	-	[`cluster.pin.rm(cid, [options], [callback])`](#peers.remove)
+	-	[`cluster.pin.ls([options], [callback])`](#pinls)
+	-	[`cluster.pin.add(cid, [options], [callback])`](#pinadd)
+	-	[`cluster.pin.rm(cid, [options], [callback])`](#pinremove)
 -	[`health`](#health)
 	- [`cluster.health.graph([options], [callback])`](#graph)
-	- [`cluster.health.metrics(name, [options], [callback])`](#metrics)
+	- [`cluster.health.metrics(type, [callback])`](#metrics)
 -	[`miscellaneous`](#node-management)
 	-	[`cluster.id([callback])`](#id)
 	-	[`cluster.version([callback])`](#version)
@@ -306,15 +306,16 @@ This command will list the CIDs which are tracked by IPFS Cluster and to which p
 
 `options` is an optional object argument that might include the following keys:
 * `filter`: (default: `pin`)  The filter only takes effect when listing all pins. The possible values are:
-	  - all
-	  - pin
-	  - meta-pin
-	  - clusterdag-pin
-	  - shard-pin
 
-	`callback` must follow `function (err, pins) {}` signature, where `err` is an error if the operation was not successful. If successful, `pins` returns the list of pins.
+	- all
+	- pin
+	- meta-pin
+	- clusterdag-pin
+	- shard-pin
 
-	If no `callback` is passed, a promise is returned.
+`callback` must follow `function (err, pins) {}` signature, where `err` is an error if the operation was not successful. If successful, `pins` returns the list of pins.
+
+If no `callback` is passed, a promise is returned.
 
 ### Example
 	
@@ -560,13 +561,15 @@ The command will wait for any operations to succeed and will return the status o
 
 When the `local` option is set, it will only trigger recover operations on the contacted peer (as opposed to on every peer).
 
+For now, ONLY requests with parameter `local=true` are supported
+
 
 **`cluster.recover([cid], [options], [callback])`**
 
 Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/) of the data to be recovered.
 
 `options` is an optional object argument that might include the following keys:
-* `local`(boolean): if set `true` it will only trigger recover
+* `local`(boolean, default: true): if set `true` it will only trigger recover
 operations on the contacted peer
 
 `callback` must follow `function (err) {}` signature, where `err` is an error if the operation was not successful.
