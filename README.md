@@ -27,6 +27,7 @@ This is a port of `ipfs/js-ipfs-api` adapted for the API exposed by `ipfs/ipfs-c
 	- [In a web browser through Browserify](#through-browserify)
 	- [In a web browser through Webpack](#through-webpack)
 	- [In a web browser through CDN](#from-cdn)
+  - [Custom Headers](#custom-headers)
 - [Usage](#usage)
   - [API Docs](#api)
   - [Callbacks and promises](#callbacks-and-promises)
@@ -137,6 +138,22 @@ If you omit the host and port, the client will parse `window.host`, and use this
 const cluster = window.IpfsClusterAPI()
 ```
 
+### **Custom Headers**
+
+If you wish to send custom headers with each request made by this library, for example, the Authorization header. You can use the config to do so:
+
+```javascript
+const cluster = ipfsCluster({
+  host: 'localhost',
+  port: 5001,
+  protocol: 'http',
+  headers: {
+    authorization: 'Basic ' + TOKEN
+  }
+})
+```
+
+
 ## Usage
 
 ### API
@@ -152,9 +169,9 @@ to be similar to `ipfs-cluster-ctl` provided in [`ipfs/ipfs-cluster`](https://gi
 -	[`pin`](#pins-management)
 	-	[`cluster.pin.ls([options], [callback])`](#pinls)
 	-	[`cluster.pin.add(cid, [options], [callback])`](#pinadd)
-	-	[`cluster.pin.rm(cid, [options], [callback])`](#pinremove)
+	-	[`cluster.pin.rm(cid, [callback])`](#pinremove)
 -	[`health`](#health)
-	- [`cluster.health.graph([options], [callback])`](#graph)
+	- [`cluster.health.graph([callback])`](#graph)
 	- [`cluster.health.metrics(type, [callback])`](#metrics)
 -	[`miscellaneous`](#node-management)
 	-	[`cluster.id([callback])`](#id)
