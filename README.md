@@ -145,7 +145,7 @@ If you wish to send custom headers with each request made by this library, for e
 ```javascript
 const cluster = ipfsCluster({
   host: 'localhost',
-  port: 5001,
+  port: 9094,
   protocol: 'http',
   headers: {
     authorization: 'Basic ' + TOKEN
