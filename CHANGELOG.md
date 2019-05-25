@@ -1,4 +1,4 @@
-## [0.0.7](https://github.com/cluster-labs/ipfs-cluster-api/compare/v0.0.6...v0.0.7) (2019-05-25)
+## [0.0.8](https://github.com/cluster-labs/ipfs-cluster-api/compare/v0.0.6...v0.0.8) (2019-05-25)
 
 ### Bug Fixes
 
