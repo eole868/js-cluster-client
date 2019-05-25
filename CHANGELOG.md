@@ -1,4 +1,16 @@
-## [0.0.6](https://github.com/cluster-labs/ipfs-cluster-api/compare/v0.0.6...v0.0.5) (2019-05-20)
+## [0.0.7](https://github.com/cluster-labs/ipfs-cluster-api/compare/v0.0.6...v0.0.7) (2019-05-25)
+
+### Bug Fixes
+
+- remove `peers.add` endpoint ([#8](https://github.com/cluster-labs/ipfs-cluster-api/issues/8))([ea660f5](https://github.com/cluster-labs/ipfs-cluster-api/commit/ea660f5b77389c78e2b07ea080035c4530827dce))
+
+### Other Improvements
+
+- improved code coverage
+
+- added docs to add [Basic Auth headers](https://github.com/cluster-labs/ipfs-cluster-api#custom-headers) 
+
+## [0.0.6](https://github.com/cluster-labs/ipfs-cluster-api/compare/v0.0.5...v0.0.6) (2019-05-20)
 
 ### Bug Fixes
 
