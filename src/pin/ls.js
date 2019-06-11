@@ -7,7 +7,7 @@ module.exports = (send) => {
     
     if(typeof opts === 'function') {
       callback = opts
-      opts = undefined      
+      opts = { filter : 'pin' }
     }
 
     send({
