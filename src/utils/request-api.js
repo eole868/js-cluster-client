@@ -20,7 +20,7 @@ function parseError (res, cb) {
     }
 
     if (payload) {
-      error.code = payload.Code
+      error.code = payload.code || payload.Code
       error.message = payload.message || payload.Message ||payload.toString()
     }
     cb(error)
