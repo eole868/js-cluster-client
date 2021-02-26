@@ -4,6 +4,9 @@
   "description": "A JS client library for the IPFS Cluster HTTP API.",
   "leadMaintainer": "Vaibhav Saini <vasa@towardsblockchain.com>",
   "main": "src/index.js",
+  "bin": {
+    "add": "bin/add.js"
+  },
   "scripts": {
     "test": "mocha",
     "test:coverage": "codecov"
@@ -24,7 +27,8 @@
     "promisify-es6": "^1.0.3",
     "pull-to-stream": "^0.1.1",
     "pump": "^3.0.0",
-    "qs": "^6.5.1"
+    "qs": "^6.5.1",
+    "yaml": "^1.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",

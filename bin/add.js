@@ -9,8 +9,8 @@ program.version('0.0.1')
 program
   .option('-d, --debug', 'output extra debugging')
   .option('-p, --path <path>', 'wrapper dir', '/')
-  .option('-h, --host <host>', 'ipfs cluster api host', '127.0.0.1')
-  .option('--port <port>', 'ipfs cluster api port', '9094')
+  .option('-h, --host <host>', 'ipfs cluster api host', '')
+  .option('--port <port>', 'ipfs cluster api port', '')
   .option('--showAll', 'show all file cid')
   .option('-t, --token <token>', 'ipfs cluster api base auth token', '')
   .option('-r, --recursive', 'recursive all sub dir')
@@ -20,11 +20,42 @@ program
     run(file)
   })
   program.parse(process.argv)
+  
 
+function parseHost() {
+    const configFile = process.env.IPFS_CLUSTER_CLIENT_CONF || process.env.HOME + "/.ipfs_cluster_client.yaml"
+    const fs = require('fs')
+    try{
+        const path = require('path')
+        const fileConfigPath = path.resolve(configFile)
+        const stats = fs.statSync(fileConfigPath)
+        if(stats.isFile) {
+            const confContent = fs.readFileSync(fileConfigPath, 'utf-8')
+            const YAML = require('yaml')
+            const host = YAML.parse(confContent)
+            return host
+        }
+    }catch(e) {
+    }
+    return {
+        host: '127.0.0.1',
+        port: '9094',
+        token: '',
+    }
+    
+    
+
+    
+}
 function run(file) {
     const options = program.opts()
     if (options.debug) console.log(options)
+
     let headers = {}
+    const conf = parseHost()
+    options.host = options.host || conf.host
+    options.port = options.port || conf.port
+    options.token = options.token || conf.token
     if(options.token) {
         //dXNlcjp1dnh6Z2NCMThMT1Zv
         headers = {
