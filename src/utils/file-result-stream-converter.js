@@ -29,7 +29,7 @@ class FileResultStreamConverter extends TransformStream {
   }
 
   _transform (obj, enc, callback) {
-    if (!obj.name) {
+    if (!obj.cid || !obj.cid['/']) {
       return callback()
     }
 
