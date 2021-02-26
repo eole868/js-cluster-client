@@ -210,7 +210,7 @@ or fulldir (just work in node)
 ```javascript
 {
   path: '/tmp/myfile.txt', // The file path
-  fulldir: {
+  fulldir: { //options.recursive must to be true
     path: file, // directory path
     hidden: <boolean> // include hidden file
   }

@@ -7,6 +7,15 @@ const obj = {
     content: Buffer.from(fs.readFileSync('src/add.js'))
 }
 
+const fulldirobj = {
+    path: 'src/utils',
+    fulldir: {
+        path: 'src/utils',
+        hidden: true
+    }
+    
+}
+
 describe('add', () => {
     
     it('adds a file Buffer to ipfs and pins it in the cluster', (done) => {
@@ -26,6 +35,13 @@ describe('add', () => {
     it('throws error while adding a string as arg param', (done) => {
         cluster.add('vasa', (err, result) => {
             assert.exists(err, 'does not throw error while adding a string as arg param')
+            done()
+        })
+    })
+
+    it('adds a dir to ipfs and pins it in the cluster', (done) => {
+        cluster.add(fulldirobj, {recursive: true}, (err, result) => {
+            assert.notExists(err, 'throws error while adding  a dir to ipfs')
             done()
         })
     })

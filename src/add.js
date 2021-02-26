@@ -34,14 +34,14 @@ module.exports = (send) => {
       // path must be a non-empty string if no content
       return Boolean(obj.path) && typeof obj.path === 'string'
     }
-    const isDirOnject = obj => {
+    const isDirObject = obj => {
       if (typeof obj !== 'object') return false
       if (typeof obj.fulldir !== 'object') return false
       // fulldir.path must be a non-empty string 
       return Boolean(obj.fulldir.path) && typeof obj.fulldir.path === 'string'
     }
     // An input atom: a buffer, stream or content object
-    const isInput = obj => isBufferOrStream(obj) || isContentObject(obj) || isDirOnject(obj)
+    const isInput = obj => isBufferOrStream(obj) || isContentObject(obj) || isDirObject(obj)
     // All is ok if data isInput or data is an array of isInput
     const ok = isInput(_files) || (Array.isArray(_files) && _files.every(isInput))
 
