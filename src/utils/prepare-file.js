@@ -3,31 +3,35 @@
 const isNode = require('detect-node')
 const flatmap = require('flatmap')
 
-function loadPaths (opts, file) {
+function loadPaths (opts, prefix, dir) {
   const path = require('path')
   const fs = require('fs')
   const glob = require('glob')
 
-  const followSymlinks = opts.followSymlinks != null ? opts.followSymlinks : true
+  const followSymlinks = dir.followSymlinks != null ? dir.followSymlinks : true
 
-  file = path.resolve(file)
+  let file = path.resolve(dir.path)
   const stats = fs.statSync(file)
+  if(!prefix.endsWith('/')) {
+    prefix += '/'
+  }
 
   if (stats.isDirectory() && !opts.recursive) {
     throw new Error('Can only add directories using --recursive')
   }
 
-  if (stats.isDirectory() && opts.recursive) {
+  if (stats.isDirectory()) {
     // glob requires a POSIX filename
     file = file.split(path.sep).join('/')
     const fullDir = file + (file.endsWith('/') ? '' : '/')
     let dirName = fullDir.split('/')
-    dirName = dirName[dirName.length - 2] + '/'
+    
+    dirName = prefix + dirName[dirName.length - 2] + '/'
     const mg = new glob.sync.GlobSync('**/*', {
       cwd: file,
       follow: followSymlinks,
-      dot: opts.hidden,
-      ignore: opts.ignore
+      dot: dir.hidden,
+      ignore: dir.ignore
     })
 
     return mg.found
@@ -68,7 +72,7 @@ function loadPaths (opts, file) {
   }
 
   return {
-    path: path.basename(file),
+    path: prefix + path.basename(file),
     content: fs.createReadStream(file)
   }
 }
@@ -82,9 +86,14 @@ function prepareFile (file, opts) {
         throw new Error('Can only add file paths in node')
       }
 
-      return loadPaths(opts, file)
+      return loadPaths(opts, "", {path: file})
     }
-
+    if (file.path && (typeof file.fulldir === 'object')) {
+      if (!isNode) {
+        throw new Error('Can only add file paths in node')
+      }
+      return loadPaths(opts, file.path, file.fulldir)
+    }
     if (file.path && !file.content) {
       file.dir = true
       return file

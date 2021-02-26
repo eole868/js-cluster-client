@@ -206,7 +206,18 @@ Where  `data`  may be:
   content: <data> // A Buffer, Readable Stream or Pull Stream with the contents of the file
 }
 ```
-If no `content` is passed, then the path is treated as an empty directory
+or fulldir (just work in node)
+```javascript
+{
+  path: '/tmp/myfile.txt', // The file path
+  fulldir: {
+    path: file, // directory path
+    hidden: <boolean> // include hidden file
+  }
+}
+```
+
+If no `content` and `fulldir` is passed , then the path is treated as an empty directory
 
 
 `options` is an optional object argument that might include the following keys:

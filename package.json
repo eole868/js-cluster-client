@@ -15,6 +15,7 @@
     "detect-node": "^2.0.4",
     "flatmap": "0.0.3",
     "is-pull-stream": "0.0.0",
+    "is-stream": "^2.0.0",
     "iso-stream-http": "^0.1.2",
     "multiaddr": "^6.0.6",
     "ndjson": "^1.5.0",
@@ -60,7 +61,7 @@
     "Tom O'Donnell <todonnel91@gmail.com>"
   ],
   "bugs": {
-    "url": "https://github.com/cluster-labs/ipfs-cluster-api/issues"
+    "url": "https://github.com/eole868/ipfs-cluster-api/issues"
   },
-  "homepage": "https://github.com/cluster-labs/ipfs-cluster-api"
+  "homepage": "https://github.com/eole868/ipfs-cluster-api"
 }
