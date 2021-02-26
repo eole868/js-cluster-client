@@ -10,7 +10,7 @@
  [![Build Status](https://travis-ci.org/cluster-labs/ipfs-cluster-api.svg?branch=master)](https://travis-ci.org/cluster-labs/ipfs-cluster-api)
  [![Code Coverage](https://codecov.io/gh/cluster-labs/ipfs-cluster-api/branch/master/graph/badge.svg)](https://codecov.io/gh/cluster-labs/ipfs-cluster-api)
 ---
-Read this in other languages: English | [简体中文](README_ZH-CN.MD) 
+Read this in other languages: English | [简体中文](README_ZH-CN.md) 
 
 **UNOFFICIAL AND ALPHA**
 

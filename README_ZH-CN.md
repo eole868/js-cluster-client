@@ -11,7 +11,7 @@
  [![Code Coverage](https://codecov.io/gh/cluster-labs/ipfs-cluster-api/branch/master/graph/badge.svg)](https://codecov.io/gh/cluster-labs/ipfs-cluster-api)
 ---
 
-使用其他语言阅读: [English](README.MD) | 简体中文
+使用其他语言阅读: [English](README.md) | 简体中文
 
 **UNOFFICIAL AND ALPHA**
 
