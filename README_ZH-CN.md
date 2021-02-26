@@ -10,7 +10,8 @@
  [![Build Status](https://travis-ci.org/cluster-labs/ipfs-cluster-api.svg?branch=master)](https://travis-ci.org/cluster-labs/ipfs-cluster-api)
  [![Code Coverage](https://codecov.io/gh/cluster-labs/ipfs-cluster-api/branch/master/graph/badge.svg)](https://codecov.io/gh/cluster-labs/ipfs-cluster-api)
 ---
-Read this in other languages: English | [简体中文](README_ZH-CN.MD) 
+
+使用其他语言阅读: [English](README.MD) | 简体中文
 
 **UNOFFICIAL AND ALPHA**
 
@@ -22,25 +23,26 @@ This is a port of `ipfs/js-ipfs-api` adapted for the API exposed by `ipfs/ipfs-c
 
 ## Table of Contents
 
-- [Install](#install)
-  - [Running the daemon with the right port](#running-the-daemon-with-the-right-port)
-  - [Importing the module and usage](#importing-the-module-and-usage)
-	- [In a web browser through Browserify](#through-browserify)
-	- [In a web browser through Webpack](#through-webpack)
-	- [In a web browser through CDN](#from-cdn)
-  - [Custom Headers](#custom-headers)
-- [Usage](#usage)
-  - [API Docs](#api)
-  - [Callbacks and promises](#callbacks-and-promises)
-- [Development](#development)
-- [Contribute](#contribute)
-- [Historical Context](#historical)
-- [License](#license)
+- [安装](#安装)
+  -[运行ipfs服务和ipfs cluster服务](#运行ipfs服务和ipfs-cluster服务)
+  - [如何导入模块](#导入和使用)
+	- [运行在浏览器，使用Browserify引入](#使用browserify)
+	- [运行在浏览器，使用Webpack引入](#使用webpack)
+	- [运行在浏览器，使用cdn引入](#使用cdn)
+  - [自定义Headers](#自定义Headers)
+- [文档](#文档)
+  - [命令行工具](#命令行工具)
+  - [API文档](#api)
+  - [Callbacks 和 promises](#callbacks-and-promises)
+- [开发信息](#开发)
+- [贡献](#贡献)
+- [历史](#历史)
+- [许可证](#许可证)
 
 
-## Install
+## 安装
 
-This module uses node.js, and can be installed through npm:
+在nodejs中使用，使用下面命令安装:
 
 ```
 npm install --save ipfs-cluster-api
@@ -48,11 +50,11 @@ npm install --save ipfs-cluster-api
 
 We support both the Current and Active LTS versions of Node.js. Please see [nodejs.org](https://nodejs.org/) for what these currently are.
 
-### Running the daemon with the right port
+### 运行ipfs服务和ipfs cluster服务
 
 **ipfs daemon**
 
-To make `ipfs-cluster-service` work, you need to have a `ipfs` local daemon running. It needs to be open on the right port. `5001` is the default, and is used in the examples below, but it can be set to whatever you need.
+`ipfs-cluster-service` 启动前, 必须在本地运行 `ipfs` 服务。 需要注意 `ipfs` 监听端口， 默认端口是`5001`, 如下面命令所示， 也可以修改成其他端口。
 
 ```
 # Show the ipfs config API port to check it is correct
@@ -68,16 +70,16 @@ To make `ipfs-cluster-service` work, you need to have a `ipfs` local daemon runn
 
 **ipfs-cluster-service daemon**
 
-To interact with the API, you need to have a daemon running. It needs to be open on the right port. `9094` is the default, and is used in the examples below, but it can be set to whatever you need. You can setup `ipfs-cluster-service` by following [**this installation guide**](https://github.com/ipfs/ipfs-cluster#install). 
+要使用API, 必须有一个运行中的服务. 确认服务监听的端口， 默认是`9094`, 也可以修改成其他端口.  `ipfs-cluster-service` 相关配置说明 [**配置文档**](https://github.com/ipfs/ipfs-cluster#install). 
 
-After installing run the daemon.
+安装ipfs-cluster-service之后，启动.
 
 ```
 # Run the daemon
 > ipfs-cluster-service daemon
 ```
 
-### Importing the module and usage
+### 导入和使用
 
 ```javascript
 const ipfsCluster = require('ipfs-cluster-api')
@@ -95,21 +97,21 @@ const cluster = ipfsCluster({ host: 'localhost', port: '9094', protocol: 'http' 
 const cluster = ipfsCluster({ host: '1.1.1.1', port: '80', 'api-path': '/some/api/path' })
 ```
 
-### In a web browser
+### 在浏览器中
 
-#### **through Browserify**
-Same as in Node.js, you just have to [browserify](http://browserify.org/) to bundle the code before serving it.
- > Note: The code uses `es6`, so you have to use [babel](https://babeljs.io/) to convert the code into `es5` before using `browserify`. 
+#### **使用Browserify**
+和在Node.js中一样, 只需要在使用前用[browserify](http://browserify.org/)打包.
+ > Note: 代码使用了 `es6`, 打包前先使用 [babel](https://babeljs.io/) 转换成 `es5`. 
 
-#### **through webpack**
-Same as in Node.js, you just have to [webpack](https://webpack.js.org/) to bundle the the code before serving it.
- > Note: The code uses `es6`, so you have to use [babel](https://babeljs.io/) to convert the code into `es5` before using `webpack`.
+#### **使用webpack**
+和在Node.js中一样,只需要在使用前用[webpack](https://webpack.js.org/)打包.
+ > Note: 代码使用了 `es6`, 打包前先使用 [babel](https://babeljs.io/) 转换成 `es5`.
 
-#### **from CDN**
+#### **使用CDN**
 
-Instead of a local installation (and browserification) you may request a remote copy of IPFS API from unpkg CDN.
+可以直接引入cdn文件使用.
 
-To always request the latest version, use the following:
+总是使用最新版, 如下:
 ```html
 <!-- loading the minified version -->
 <script src="https://unpkg.com/ipfs-cluster-api/dist/src/index.min.js"></script>
@@ -117,7 +119,7 @@ To always request the latest version, use the following:
 <script src="https://unpkg.com/ipfs-cluster-api/dist/src/index.js"></script>
 ```
 
-CDN-based IPFS Cluster API provides the `IpfsClusterAPI` constructor as a method of the global `window` object. Example:
+CDN-based IPFS Cluster API 在`window` 对象上添加了一个`IpfsClusterAPI`函数,如下::
 
 ```javascript
 // connect to ipfs daemon API server
@@ -139,9 +141,9 @@ If you omit the host and port, the client will parse `window.host`, and use this
 const cluster = window.IpfsClusterAPI()
 ```
 
-### **Custom Headers**
+### **自定义 Headers**
 
-If you wish to send custom headers with each request made by this library, for example, the Authorization header. You can use the config to do so:
+如果你想为单独的请求设置自定义Headers, 比如设置Authorization header。 你可以像这样配置:
 
 ```javascript
 const cluster = ipfsCluster({
@@ -155,12 +157,77 @@ const cluster = ipfsCluster({
 ```
 
 
-## Usage
+## 文档
+### 命令行工具
+-	[`add`](#adding-&-pinning-data-to-cluster-command-line-tool)
 
+
+#### Adding & pinning data to cluster-command-line-tool
+##### **`add`**
+```
+$ bin/add.js --help
+Usage: add [options] <file>
+Options:
+  -V, --version        output the version number
+  -d, --debug          output extra debugging
+  -p, --path <path>    wrapper dir (default: "/")
+  -h, --host <host>    ipfs cluster api host (default: "")
+  --port <port>        ipfs cluster api port (default: "")
+  --showAll            show all file cid
+  -t, --token <token>  ipfs cluster api base auth token (default: "")
+  -r, --recursive      recursive all sub dir
+  -a, --all            include hidden file
+  --help               output usage information
+```
+返回格式如下:
+```
+{
+  path: 'web',
+  hash: 'QmdiRp2QU1pYb4r1Hmbfah3Ckqq2p56vDSBarm4VWHSdWg',
+  size: 1042
+}
+```
+或者使用showAll参数
+```
+[
+  {
+    path: 'web/index.html',
+    hash: 'QmZJZG6WuiKMgXw4YANsgJQE98hmahBN7icxPtx4RoDR4M',
+    size: 430
+  },
+  {
+    path: 'web/main.css',
+    hash: 'QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH',
+    size: 6
+  },
+  {
+    path: 'web/main.js',
+    hash: 'QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH',
+    size: 6
+  },
+  {
+    path: 'web/sub.html',
+    hash: 'QmY3Gn49Dx4ybPwZ8AQ9kFjjWRhr7Y1vVVYp5N9yyYMSg6',
+    size: 393
+  },
+  {
+    path: 'web',
+    hash: 'QmdiRp2QU1pYb4r1Hmbfah3Ckqq2p56vDSBarm4VWHSdWg',
+    size: 1042
+  }
+]
+```
+`host`, `port`, `token`参数支持通过配置文件配置， 默认配置文件为`~/.ipfs_cluster_client.yaml`,配置文件如下：
+```yaml
+host: "127.0.0.1"
+port: 9094
+token: ""
+```
+配置文件路径可以使用`IPFS_CLUSTER_CLIENT_CONF`环境变量自定义设置。
 ### API
 
-The API is currently a work-in-progress. The exposed methods are designed
-to be similar to `ipfs-cluster-ctl` provided in [`ipfs/ipfs-cluster`](https://github.com/ipfs/ipfs-cluster).
+API仍在开发中，公开的接口和`ipfs-cluster-ctl`的命令相似
+[`ipfs/ipfs-cluster`](https://github.com/ipfs/ipfs-cluster).
 
 -	[`add`](#adding-&-pinning-data-to-cluster)
 	-	[`cluster.add(data, [options], [callback])`](#add)
@@ -184,7 +251,7 @@ to be similar to `ipfs-cluster-ctl` provided in [`ipfs/ipfs-cluster`](https://gi
 
 ### Adding & pinning data to cluster
 #### **`add`**
-> Add and pin data to the cluster
+> 添加并固定文件到集群中
 
 Add allows to add and replicate content to several ipfs daemons, performing a Cluster Pin operation on success. It takes elements from local paths as well as from web URLs (accessed with a GET request).
 
@@ -195,7 +262,7 @@ Once the adding process is finished, the content is fully added to all allocatio
 
 **`cluster.add(data, [options], [callback])`**
 
-Where  `data`  may be:
+  `data`支持的类型:
 
 -   a  [`Buffer instance`](https://www.npmjs.com/package/buffer)
 -   a  [`Readable Stream`](https://www.npmjs.com/package/readable-stream)
@@ -207,7 +274,7 @@ Where  `data`  may be:
   content: <data> // A Buffer, Readable Stream or Pull Stream with the contents of the file
 }
 ```
-or fulldir (just work in node)
+or fulldir (只有在nodejs中支持)
 ```javascript
 {
   path: '/tmp/myfile.txt', // The file path
@@ -218,10 +285,11 @@ or fulldir (just work in node)
 }
 ```
 
-If no `content` and `fulldir` is passed , then the path is treated as an empty directory
+如果 `content` 和 `fulldir` 都没有, 将会添加一个名字是`path
+`的空目录
 
 
-`options` is an optional object argument that might include the following keys:
+`options` 是一个可选参数， 包含下面的key:
 -	`replication-min` (int, default: 0):	Sets the minimum replication factor for pinning this file
 -	`replication-max` (int, default: 0):	Sets the maximum replication factor for pinning this: file
 -	`name` (string, default: ""):	Sets a name for this pin
@@ -240,7 +308,7 @@ If no `content` and `fulldir` is passed , then the path is treated as an empty d
 -	`nocopy` (bool, default: false):	Add the URL using filestore. Implies raw-leaves
 
 
-`callback` must follow `function (err, res) {}` signature, where `err` is an error if the operation was not successful. If successful, `res` will return an object of following form:
+`callback` 类型为 `function (err, res) {}`, err为失败时的错误信息. 如果成功, `res` 返回一个数组，数组中元素格式如下:
 
 ```javascript
 {
@@ -250,7 +318,7 @@ If no `content` and `fulldir` is passed , then the path is treated as an empty d
 }
 ```
 
-If no `callback` is passed, a promise is returned.
+如果`callback`参数为空, 将会返回一个promise.
 
 ### Example
 ```javascript
@@ -258,13 +326,13 @@ cluster.add(Buffer.from("vasa"), (err, result) => {
   err ? console.error(err) : console.log(result)
 })
 ```
-### Peer management
+### Peers management
 > Lists, adds & removes peers from the cluster
 
 #### **`peers`**
 
 #### **`peers.ls`**
-> Lists the peers in the cluster
+> 列出集群中的所有节点
 	
 This command tells IPFS Cluster to no longer manage a CID. This will trigger unpinning operations in all the IPFS nodes holding the content.
 
@@ -302,7 +370,7 @@ cluster.peers.ls((err, peers) => {
 ```
 
 #### **`peers.remove`**
-> Removes peer from the cluster
+> 删除一个节点
 
 This command removes a peer from the cluster. If the peer is online, it will automatically shut down. All other cluster peers should be online for the operation to succeed, otherwise some nodes may be left with an outdated list of cluster peers.
 	
@@ -327,7 +395,7 @@ cluster.peers.rm("QmdKAFhAAnc6U3ik6XfEDVKEsok7TnQ1yeyXmnnvGFmBhx", (err) => {
 #### **`pin`**
 
 #### **`pin.ls`**
-> Lists the pins in the pinlist
+> 列出pinned文件
 
 This command will list the CIDs which are tracked by IPFS Cluster and to which peers they are currently allocated. This list does not include any monitoring information about the IPFS status of the CIDs, it merely represents the list of pins which are part of the shared state of the cluster. For IPFS-status information about the pins, use "status".
 	
@@ -359,7 +427,7 @@ cluster.pin.ls({filter: 'all'}, (err, pins) => {
 	  
 
 #### **`pin.add`**
-> Adds a pin to the cluster
+> 在集群中pin一个cid
 	
 This command tells IPFS Cluster to start managing a CID. Depending on the pinning strategy, this will trigger IPFS pin requests. The CID will become part of the Cluster's state and will tracked from this point.
 
@@ -371,7 +439,7 @@ An optional allocations argument can be provided, allocations should be a comma-
 	
 **`cluster.pin.add(cid, [options], [callback])`**
 
-Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/)  of the data to be pinned.
+ `cid` 是要pinned的[CID](https://docs.ipfs.io/guides/concepts/cid/).
 
 `options` is an optional object argument that might include the following keys:
 -	`replication-min`	(int, default: 0):	Sets the minimum replication factor for this pin	
@@ -381,9 +449,9 @@ Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/)  of the data
 -	`user-allocations`: (string array): Optional comma-separated list of peer IDs where data will be pinned
 -	`shard_size`	(int, default: 0)
 
-`callback` must follow `function (err) {}` signature, where `err` is an error if the operation was not successful.
+`callback` 类型为 `function (err, res) {}`, err为失败时的错误信息。
 
-If no `callback` is passed, a promise is returned.
+如果`callback`参数为空, 将会返回一个promise。
 
 ### Example
 ```javascript
@@ -395,7 +463,7 @@ cluster.pin.add(CID, (err) => {
    
 
 #### **`pin.remove`**
-> Removes a pin from the pinlist
+> 删除一个pinned文件
 
 This command tells IPFS Cluster to no longer manage a CID. This will trigger unpinning operations in all the IPFS nodes holding the content.
 
@@ -405,11 +473,11 @@ When the request has succeeded, the command returns the status of the CID in the
 	
 **`cluster.pin.rm(cid, [callback])`**
 
-Where `cid` is the [CID](https://docs.ipfs.io/guides/concepts/cid/) of the data to be unpinned.
+`cid` 是将要移出pinlist的 [CID](https://docs.ipfs.io/guides/concepts/cid/).
 
-`callback` must follow `function (err) {}` signature, where `err` is an error if the operation was not successful.
+`callback` 类型为 `function (err, res) {}`, err为失败时的错误信息。
 
-If no `callback` is passed, a promise is returned.
+如果`callback`参数为空, 将会返回一个promise。
 
 ### Example
 ```javascript
@@ -424,15 +492,15 @@ cluster.pin.rm(CID, (err) => {
 
 #### Node management
 #### **`id`**
-> Gets the connected peer's name, address info
+> 获取节点的 `name` 和地址信息
 
 This command displays information about the peer that the tool is contacting.
 
 **`cluster.id([callback])`**
 
-`callback` must follow `function (err, id) {}` signature, where `err` is an error if the operation was not successful. If successful, `id` returns the information about the peer that the tool is contacting.
+`callback` 类型为 `function (err, id) {}`, err为失败时的错误信息。如果成功, `id` returns the information about the peer that the tool is contacting.
 
-If no `callback` is passed, a promise is returned.
+如果`callback`参数为空, 将会返回一个promise。
 
 ### Example
 
@@ -443,16 +511,17 @@ cluster.id((err, id) => {
 ```
 
 #### **`version`**
-> Gets the current version of IPFS Cluster version
+> 获得当前集群服务器版本
 
 This command retrieves the IPFS Cluster version and can be used
 to check that it matches the CLI version 
 
 **`cluster.version([callback])`**
 
-`callback` must follow `function (err, version) {}` signature, where `err` is an error if the operation was not successful. If successful, `version` will return the IPFS Cluster version.
+`callback` 类型为 `function (err, version) {}`, err为失败时的错误信息。如果成功,  `version` will return the IPFS Cluster version.
 
-If no `callback` is passed, a promise is returned.
+如果`callback`参数为空, 将会返回一个promise。
+
 
 ### Example
 ```javascript
@@ -614,12 +683,12 @@ cluster.recover(CID, { local:  true }, (err) => {
 })
 ```
 
-## Development
+## 开发
 
-### Testing
+### 测试
 We run tests by executing `npm test` in a terminal window. This will run Node.js tests.
 
-## Contribute
+## 贡献
 
 The `ipfs-cluster-api` is a work in progress. As such, there's a few things you can do right now to help out:
 
@@ -634,10 +703,10 @@ You can also checkout our **[other projects](https://github.com/cluster-labs)**
 
 It's recommended to follow the [Contribution Guidelines](https://github.com/ipfs/community/blob/master/CONTRIBUTING_JS.md).
 
-## Historical Context
+## 历史
 
 This module started as a direct mapping from the Go `ipfs-cluster-ctl` to a JavaScript implementation.
 
-## License
+## 许可证
 
 [MIT](LICENSE)
